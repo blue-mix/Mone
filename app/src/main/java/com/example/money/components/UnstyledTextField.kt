@@ -48,7 +48,9 @@ fun UnstyledTextField(
     maxLines: Int = Int.MAX_VALUE,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = TextFieldDefaults.filledShape,
+
     colors: TextFieldColors = TextFieldDefaults.colors()
+
 ) {
     // If color is not provided via the text style, use content color as a default
     val textColor = TextPrimary
@@ -91,13 +93,22 @@ fun UnstyledTextField(
                 isError = isError,
                 interactionSource = interactionSource,
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                colors = TextFieldDefaults.colors(
-//                    containerColor = Color.Transparent,
-//                    focusedTextColor = TextPrimary,
-//                    cursorColor = Primary,
-//                    focusedIndicatorColor = Color.Transparent,
-//                    unfocusedIndicatorColor = Color.Transparent,
-//                    disabledIndicatorColor = Color.Transparent,
+                colors =TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Red,
+
+                    cursorColor = Primary,
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary,
+                    disabledTextColor = TextPrimary.copy(alpha = 0.5f),
+                    errorTextColor = TextPrimary
                 ),
             )
         })

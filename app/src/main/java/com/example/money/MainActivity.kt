@@ -146,6 +146,7 @@ import com.example.money.models.Category
 import com.example.money.models.Expense
 import com.example.money.models.Recurrence
 import com.example.money.pages.Add
+import com.example.money.pages.AnalyticsPage
 import com.example.money.pages.Categories
 import com.example.money.pages.Expenses
 import com.example.money.pages.OnboardingScreens.OnBoardingScreen
@@ -250,18 +251,10 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(navController: NavController, currencyViewModel: CurrencyViewModel) {
     val bottomNavController = rememberNavController()
     val backStackEntry by bottomNavController.currentBackStackEntryAsState()
-//    val context = LocalContext.current
-//    val expensesList by remember {
-//        mutableStateOf(readSmsInbox(context)) // ✅ Load expenses at first composition
-//    }
+
     val expensesList = remember { mutableStateListOf<Expense>() }
     val context = LocalContext.current
 
-//    // Fetch SMS expenses when screen loads
-//    LaunchedEffect(Unit) {
-//        val fetchedExpenses = readSmsInbox(context)
-//        expensesList.addAll(fetchedExpenses)
-//    }
     LaunchedEffect(Unit) {
         val fetchedExpenses = readSmsInbox(context)
         Log.d("SMS_Expenses", "Fetched transactions: ${fetchedExpenses.size}") // Debug Log
@@ -293,6 +286,9 @@ fun MainScreen(navController: NavController, currencyViewModel: CurrencyViewMode
                 }
                 composable("reports") { Reports(vm = ReportsViewModel(), currencyViewModel) }
                 composable("add") { Add(navController) }
+                composable("analytics") {
+                    AnalyticsPage(navController = bottomNavController, expenses = expensesList)
+                }
                 composable("settings") { Settings(navController) }
             }
         }
@@ -327,6 +323,14 @@ fun BottomNavigationBar(navController: NavController) {
             }
         )
         NavigationBarItem(
+            selected = backStackEntry?.destination?.route == "analytics",
+            onClick = { navController.navigate("analytics") },
+            label = { Text("Analytics") },
+            icon = {
+                Icon(painterResource(id = R.drawable.analytics), contentDescription = "Analytics")
+            }
+        )
+        NavigationBarItem(
             selected = backStackEntry?.destination?.route == "add",
             onClick = { navController.navigate("add") },
             label = { Text("Add") },
@@ -344,20 +348,6 @@ fun BottomNavigationBar(navController: NavController) {
             }
         )
     }
-}
-
-
-
-
-// Function to generate a random Recurrence
-fun getRandomRecurrence(): Recurrence {
-    return listOf(
-        Recurrence.None,
-        Recurrence.Daily,
-        Recurrence.Weekly,
-        Recurrence.Monthly,
-        Recurrence.Yearly
-    ).random()
 }
 
 fun readSmsInbox(context: Context): List<Expense> {
@@ -379,7 +369,7 @@ fun readSmsInbox(context: Context): List<Expense> {
                     Expense.create(
                         amount = if (parsedTransaction.type == "credit") parsedTransaction.amount else -parsedTransaction.amount,
                         date = it1.atStartOfDay(),  // Convert parsed date if needed
-                        recurrence = getRandomRecurrence(),
+                        recurrence = Recurrence.None,
                         note = "Transaction with ${parsedTransaction.merchant}",
                         category = mapMerchantToCategory(
                             parsedTransaction.merchant,

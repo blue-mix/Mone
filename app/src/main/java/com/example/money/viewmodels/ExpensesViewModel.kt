@@ -17,7 +17,7 @@ import com.example.money.utils.calculateDateRange
 
 data class ExpensesState(
     val recurrence: Recurrence = Recurrence.Daily,
-    val sumTotal: Double = 1250.98,
+    val sumTotal: Double = 00.00,
     val expenses: List<Expense> = listOf()
 )
 

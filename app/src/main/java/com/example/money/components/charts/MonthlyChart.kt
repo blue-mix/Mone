@@ -1,54 +1,145 @@
 package com.example.money.components.charts
+//
+//import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.foundation.layout.padding
+//import androidx.compose.runtime.Composable
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.unit.dp
+//import androidx.compose.ui.unit.sp
+//import com.example.money.models.Expense
+//import com.example.money.models.Recurrence
+//import com.example.money.models.groupedByDayOfMonth
+//import com.example.money.ui.theme.LabelSecondary
+//import com.example.money.utils.simplifyNumber
+//import com.github.tehras.charts.bar.BarChart
+//import com.github.tehras.charts.bar.BarChartData
+//import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
+//import java.time.LocalDate
+//import java.time.YearMonth
+//
+//
+//@Composable
+//fun MonthlyChart(expenses: List<Expense>, month: LocalDate) {
+//    val groupedExpenses = expenses.groupedByDayOfMonth()
+//    val numberOfDays = YearMonth.of(month.year, month.month).lengthOfMonth()
+//
+//    BarChart(
+//        barChartData = BarChartData(
+//            bars = buildList() {
+//                for (i in 1..numberOfDays) {
+//                    add(
+//                        BarChartData.Bar(
+//                            label = "$i",
+//                            value = groupedExpenses[i]?.total?.toFloat()
+//                                ?: 0f,
+//                            color = Color.White,
+//                        )
+//                    )
+//                }
+//            }
+//        ),
+//        labelDrawer = LabelDrawer(recurrence = Recurrence.Monthly, lastDay = numberOfDays),
+//        yAxisDrawer = SimpleYAxisDrawer(
+//            labelTextColor = LabelSecondary,
+//            labelValueFormatter = ::simplifyNumber,
+//            labelRatio = 7,
+//            labelTextSize = 14.sp
+//        ),
+//        barDrawer = BarDrawer(recurrence = Recurrence.Monthly),
+//        modifier = Modifier
+//            .padding(bottom = 20.dp)
+//            .fillMaxSize()
+//    )
+//}
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import android.graphics.Typeface
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.dimrnhhh.moneytopia.components.charts.rememberMarker
 import com.example.money.models.Expense
-import com.example.money.models.Recurrence
 import com.example.money.models.groupedByDayOfMonth
-import com.example.money.ui.theme.LabelSecondary
-import com.example.money.utils.simplifyNumber
-import com.github.tehras.charts.bar.BarChart
-import com.github.tehras.charts.bar.BarChartData
-import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
+import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.component.shape.shader.fromBrush
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.DefaultAlpha
+import com.patrykandpatrick.vico.core.axis.AxisItemPlacer
+import com.patrykandpatrick.vico.core.axis.AxisPosition
+import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.chart.line.LineChart
+import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
+import com.patrykandpatrick.vico.core.component.text.textComponent
+import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.entry.entryOf
 import java.time.LocalDate
 import java.time.YearMonth
 
-
 @Composable
-fun MonthlyChart(expenses: List<Expense>, month: LocalDate) {
+fun MonthlyChart(
+    expenses: List<Expense>,
+    month: LocalDate
+) {
     val groupedExpenses = expenses.groupedByDayOfMonth()
-    val numberOfDays = YearMonth.of(month.year, month.month).lengthOfMonth()
-
-    BarChart(
-        barChartData = BarChartData(
-            bars = buildList() {
-                for (i in 1..numberOfDays) {
-                    add(
-                        BarChartData.Bar(
-                            label = "$i",
-                            value = groupedExpenses[i]?.total?.toFloat()
-                                ?: 0f,
-                            color = Color.White,
+    val numberOfDays = YearMonth.of(month.year, month.month).lengthOfMonth()+1
+    fun getMonthlyEntries() = List(numberOfDays) {
+        entryOf(it, groupedExpenses[it]?.total?.toFloat()?: 0f)
+    }
+    val daysOfWeek: MutableList<String> = mutableListOf()
+    for(i in 0.. numberOfDays) {
+        daysOfWeek.add(i.toString())
+    }
+    val chartEntryModel = entryModelOf(getMonthlyEntries().subList(1, numberOfDays))
+    val bottomAxisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> {
+            x, _ -> daysOfWeek[x.toInt() % daysOfWeek.size]
+    }
+    ProvideChartStyle(
+        chartStyle = m3ChartStyle()
+    ) {
+        Chart(
+            modifier = Modifier
+                .offset(y = (-20).dp),
+            chart = lineChart(
+                lines = listOf(
+                    LineChart.LineSpec(
+                        lineColor = MaterialTheme.colorScheme.primary.toArgb(),
+                        lineBackgroundShader = DynamicShaders.fromBrush(
+                            brush = Brush.verticalGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.primary.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_START),
+                                    MaterialTheme.colorScheme.primary.copy(DefaultAlpha.LINE_BACKGROUND_SHADER_END)
+                                )
+                            )
                         )
                     )
+                ),
+            ),
+            /*chartModelProducer = chartEntryModelProducer,*/
+            model = chartEntryModel,
+            startAxis = rememberStartAxis(
+                label = textComponent{
+                    color = MaterialTheme.colorScheme.onBackground.toArgb()
+                },
+                itemPlacer = AxisItemPlacer.Vertical.default(maxItemCount = 5)
+            ),
+            bottomAxis = rememberBottomAxis(
+                valueFormatter = bottomAxisValueFormatter,
+                label = textComponent{
+                    color = MaterialTheme.colorScheme.onBackground.toArgb()
+                    typeface = Typeface.SANS_SERIF
                 }
-            }
-        ),
-        labelDrawer = LabelDrawer(recurrence = Recurrence.Monthly, lastDay = numberOfDays),
-        yAxisDrawer = SimpleYAxisDrawer(
-            labelTextColor = LabelSecondary,
-            labelValueFormatter = ::simplifyNumber,
-            labelRatio = 7,
-            labelTextSize = 14.sp
-        ),
-        barDrawer = BarDrawer(recurrence = Recurrence.Monthly),
-        modifier = Modifier
-            .padding(bottom = 20.dp)
-            .fillMaxSize()
-    )
+            ),
+            isZoomEnabled = false,
+            marker = rememberMarker()
+
+        )
+    }
 }

@@ -1,15 +1,16 @@
 package com.example.money.models
 
-import io.realm.kotlin.types.ObjectId
+
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
+import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class Expense() : RealmObject {
     @PrimaryKey
-    var _id: ObjectId = ObjectId.create()
+    var _id: ObjectId = ObjectId()
     var amount: Double = 0.0
 
     private var _recurrenceName: String = "None"

@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -56,6 +57,8 @@ import com.marosseleng.compose.material3.datetimepickers.date.ui.dialog.DatePick
 @Composable
 fun Add(navController: NavController, vm: AddViewModel = viewModel()) {
     val state by vm.uiState.collectAsState()
+    var recurrenceMenuOpened by rememberSaveable { mutableStateOf(false) }
+    var categoriesMenuOpened by rememberSaveable { mutableStateOf(false) }
 
     val recurrences = listOf(
         Recurrence.None,
@@ -106,9 +109,7 @@ fun Add(navController: NavController, vm: AddViewModel = viewModel()) {
                     color = DividerColor
                 )
                 TableRow(label = "Recurrence", detailContent = {
-                    var recurrenceMenuOpened by remember {
-                        mutableStateOf(false)
-                    }
+
                     TextButton(
                         onClick = { recurrenceMenuOpened = true }, shape = Shapes.large
                     ) {
@@ -169,9 +170,7 @@ fun Add(navController: NavController, vm: AddViewModel = viewModel()) {
                     color = DividerColor
                 )
                 TableRow(label = "Category", detailContent = {
-                    var categoriesMenuOpened by remember {
-                        mutableStateOf(false)
-                    }
+
                     TextButton(
                         onClick = { categoriesMenuOpened = true }, shape = Shapes.large
                     ) {

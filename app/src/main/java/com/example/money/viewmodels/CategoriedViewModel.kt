@@ -77,7 +77,7 @@ class CategoriesViewModel : ViewModel() {
     fun createNewCategory() {
         viewModelScope.launch(Dispatchers.IO) {
             db.write {
-                this.copyToRealm(Category.create(
+                this.copyToRealm(Category(
                     _uiState.value.newCategoryName,
                     _uiState.value.newCategoryColor
                 ))

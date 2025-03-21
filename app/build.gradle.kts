@@ -3,7 +3,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.realm.kotlin)
 }
 
@@ -64,6 +64,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(libs.skydoves.colorpicker.compose)
     implementation(libs.compose.material3.datetime.pickers)
     implementation(libs.realm.kotlin)
@@ -71,4 +73,12 @@ dependencies {
     implementation(libs.me.saket.swipe)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.patrykandpatrick.vico.core)
+    implementation(libs.patrykandpatrick.vico.compose)
+    implementation(libs.patrykandpatrick.vico.compose.m3)
+
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.compose.material.icons.extended)
+
 }

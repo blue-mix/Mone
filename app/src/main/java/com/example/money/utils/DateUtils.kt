@@ -14,8 +14,8 @@ fun LocalDate.formatDay(): String {
     return when {
         this.isEqual(today) -> "Today"
         this.isEqual(yesterday) -> "Yesterday"
-        this.year != today.year -> this.format(DateTimeFormatter.ofPattern("ddd, dd MMM yyyy"))
-        else -> this.format(DateTimeFormatter.ofPattern("E, dd MMM"))
+        this.year != today.year -> this.format(DateTimeFormatter.ofPattern(" dd MMM yyyy"))
+        else -> this.format(DateTimeFormatter.ofPattern("EEE, dd MMM"))
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.money.components
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,10 +28,13 @@ import com.example.money.models.Recurrence
 import com.example.money.ui.theme.LabelSecondary
 import com.example.money.ui.theme.Typography
 import com.example.money.utils.formatDayForRange
+import com.example.money.viewmodels.CurrencyViewModel
 import com.example.money.viewmodels.ReportPageViewModel
 import com.example.money.viewmodels.viewModelFactory
 import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.time.LocalDate
+import java.util.Currency
 
 @Composable
 fun ReportPage(
@@ -41,6 +47,15 @@ fun ReportPage(
             ReportPageViewModel(page, recurrence)
         })
 ) {
+    val currencyViewModel: CurrencyViewModel = viewModel(factory = viewModelFactory {
+        CurrencyViewModel(application = Application())
+    })
+    val selectedCurrency by currencyViewModel.selectedCurrency.collectAsState()
+    val currencyFormatter = remember(selectedCurrency) {
+        NumberFormat.getCurrencyInstance().apply {
+            currency = Currency.getInstance(selectedCurrency)
+        }
+    }
     val uiState = vm.uiState.collectAsState().value
 
     Column(
@@ -64,7 +79,7 @@ fun ReportPage(
                 )
                 Row(modifier = Modifier.padding(top = 4.dp)) {
                     Text(
-                        "USD",
+                        "INR",
                         style = Typography.bodyMedium,
                         color = LabelSecondary,
                         modifier = Modifier.padding(end = 4.dp)
@@ -79,7 +94,7 @@ fun ReportPage(
                 Text("Avg/day", style = Typography.titleSmall)
                 Row(modifier = Modifier.padding(top = 4.dp)) {
                     Text(
-                        "USD",
+                        "INR",
                         style = Typography.bodyMedium,
                         color = LabelSecondary,
                         modifier = Modifier.padding(end = 4.dp)
@@ -114,7 +129,7 @@ fun ReportPage(
                 .weight(1f)
                 .verticalScroll(
                     rememberScrollState()
-                )
+                ), currencyViewModel
         )
     }
 }

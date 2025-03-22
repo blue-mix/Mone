@@ -1,5 +1,5 @@
 package com.example.money.pages
-
+//
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -36,28 +37,108 @@ import com.example.money.ui.theme.TopAppBarBackground
 import com.example.money.viewmodels.KeywordMappingViewModel
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.launch
-
-
+//
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun Settings(navController: NavController) {
+//    val coroutineScope = rememberCoroutineScope()
+//    var deleteConfirmationShowing by remember {
+//        mutableStateOf(false)
+//    }
+//
+//    val eraseAllData: () -> Unit = {
+//        coroutineScope.launch {
+//            db.write {
+//                val expenses = this.query<Expense>().find()
+//                val categories = this.query<Category>().find()
+//
+//                delete(expenses)
+//                delete(categories)
+//
+//                deleteConfirmationShowing = false
+//            }
+//        }
+//    }
+//
+//    Scaffold(
+//        topBar = {
+//            MediumTopAppBar(
+//                title = { Text("Settings") },
+//                colors = TopAppBarDefaults.mediumTopAppBarColors(
+//                    containerColor = TopAppBarBackground
+//                )
+//            )
+//        },
+//        content = { innerPadding ->
+//            Column(modifier = Modifier.padding(innerPadding)) {
+//                Column(
+//                    modifier = Modifier
+//                        .padding(16.dp)
+//                        .clip(Shapes.large)
+//                        .background(BackgroundElevated)
+//                        .fillMaxWidth()
+//                ) {
+//                    TableRow(
+//                        label = "Categories",
+//                        hasArrow = true,
+//                        modifier = Modifier.clickable {
+//                            navController.navigate("settings/categories")
+//                        })
+//                    TableRow(
+//                        label = "Keywords",
+//                        hasArrow = true,
+//                        modifier = Modifier.clickable {
+//                            navController.navigate("settings/keyword")
+//                        })
+//
+//
+//                    Divider(
+//                        modifier = Modifier
+//                            .padding(start = 16.dp), thickness = 1.dp, color = DividerColor
+//                    )
+//                    TableRow(
+//                        label = "Erase all data",
+//                        isDestructive = true,
+//                        modifier = Modifier.clickable {
+//                            deleteConfirmationShowing = true
+//                        })
+//
+//                    if (deleteConfirmationShowing) {
+//                        AlertDialog(
+//                            onDismissRequest = { deleteConfirmationShowing = false },
+//                            title = { Text("Are you sure?") },
+//                            text = { Text("This action cannot be undone.") },
+//                            confirmButton = {
+//                                TextButton(onClick = eraseAllData) {
+//                                    Text("Delete everything")
+//                                }
+//                            },
+//                            dismissButton = {
+//                                TextButton(onClick = { deleteConfirmationShowing = false }) {
+//                                    Text("Cancel")
+//                                }
+//                            }
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    )
+//}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
-    var deleteConfirmationShowing by remember {
-        mutableStateOf(false)
-    }
-
-    val showBottomSheet = remember { mutableStateOf(false) }
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var deleteConfirmationShowing by remember { mutableStateOf(false) }
 
     val eraseAllData: () -> Unit = {
         coroutineScope.launch {
             db.write {
-                val expenses = this.query<Expense>().find()
-                val categories = this.query<Category>().find()
-
+                val expenses = query<Expense>().find()
+                val categories = query<Category>().find()
                 delete(expenses)
                 delete(categories)
-
                 deleteConfirmationShowing = false
             }
         }
@@ -67,72 +148,89 @@ fun Settings(navController: NavController) {
         topBar = {
             MediumTopAppBar(
                 title = { Text("Settings") },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = TopAppBarBackground
-                )
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = TopAppBarBackground)
             )
-        },
-        content = { innerPadding ->
-            Column(modifier = Modifier.padding(innerPadding)) {
-                Column(
+        }
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clip(Shapes.large)
+                    .background(BackgroundElevated)
+                    .fillMaxWidth()
+            ) {
+                TableRow(
+                    label = "Categories",
+                    hasArrow = true,
+                    modifier = Modifier.clickable {
+                        navController.navigate("settings/categories")
+                    }
+                )
+                TableRow(
+                    label = "Keywords",
+                    hasArrow = true,
+                    modifier = Modifier.clickable {
+                        navController.navigate("settings/keyword")
+                    }
+                )
+                TableRow(
+                    label = "Currency Preference",
+                    hasArrow = true,
+                    modifier = Modifier.clickable {
+                        // navController.navigate("settings/currency") // Placeholder
+                    }
+                )
+                TableRow(
+                    label = "About",
+                    hasArrow = true,
+                    modifier = Modifier.clickable {
+                       // navController.navigate("settings/about")
+                    }
+                )
+
+                Divider(
+                    modifier = Modifier.padding(start = 16.dp),
+                    thickness = 1.dp,
+                    color = DividerColor
+                )
+
+                TableRow(
+                    label = "Erase all data",
+                    isDestructive = true,
+                    modifier = Modifier.clickable {
+                        deleteConfirmationShowing = true
+                    }
+                )
+
+                if (deleteConfirmationShowing) {
+                    AlertDialog(
+                        onDismissRequest = { deleteConfirmationShowing = false },
+                        title = { Text("Are you sure?") },
+                        text = { Text("This action cannot be undone.") },
+                        confirmButton = {
+                            TextButton(onClick = eraseAllData) {
+                                Text("Delete everything")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { deleteConfirmationShowing = false }) {
+                                Text("Cancel")
+                            }
+                        }
+                    )
+                }
+
+                // Footer Text
+                Text(
+                    text = "Made with ❤️ by Bluemix",
                     modifier = Modifier
                         .padding(16.dp)
-                        .clip(Shapes.large)
-                        .background(BackgroundElevated)
-                        .fillMaxWidth()
-                ) {
-                    TableRow(
-                        label = "Categories",
-                        hasArrow = true,
-                        modifier = Modifier.clickable {
-                            navController.navigate("settings/categories")
-                        })
-                    TableRow(
-                        label = "Keywords",
-                        hasArrow = true,
-                        modifier = Modifier.clickable {
-                            navController.navigate("settings/keyword")
-                            showBottomSheet.value = true})
-
-                    if (showBottomSheet.value) {
-                        ModalBottomSheet(
-                            onDismissRequest = { showBottomSheet.value = false },
-                            sheetState = bottomSheetState
-                        ) {
-                            KeywordMappingEditor(navController, viewModel = KeywordMappingViewModel())
-                        }
-                    }
-
-                    Divider(
-                        modifier = Modifier
-                            .padding(start = 16.dp), thickness = 1.dp, color = DividerColor
-                    )
-                    TableRow(
-                        label = "Erase all data",
-                        isDestructive = true,
-                        modifier = Modifier.clickable {
-                            deleteConfirmationShowing = true
-                        })
-
-                    if (deleteConfirmationShowing) {
-                        AlertDialog(
-                            onDismissRequest = { deleteConfirmationShowing = false },
-                            title = { Text("Are you sure?") },
-                            text = { Text("This action cannot be undone.") },
-                            confirmButton = {
-                                TextButton(onClick = eraseAllData) {
-                                    Text("Delete everything")
-                                }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = { deleteConfirmationShowing = false }) {
-                                    Text("Cancel")
-                                }
-                            }
-                        )
-                    }
-                }
+                        .fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.outline,
+                    style = MaterialTheme.typography.labelSmall
+                )
             }
         }
-    )
+    }
 }

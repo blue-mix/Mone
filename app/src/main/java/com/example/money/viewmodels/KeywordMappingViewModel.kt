@@ -3,6 +3,7 @@ package com.example.money.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.money.Database
+import com.example.money.models.Category
 import com.example.money.models.KeywordMapping
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,10 @@ class KeywordMappingViewModel : ViewModel() {
     private val realm = Database.db
     private val _mappings = MutableStateFlow<List<KeywordMapping>>(emptyList())
     val mappings: StateFlow<List<KeywordMapping>> = _mappings
+    fun getAllCategories(): List<Category> {
+        return realm.query<Category>().find()
+    }
+
 
     init {
         fetchMappings()
@@ -42,15 +47,14 @@ class KeywordMappingViewModel : ViewModel() {
         fetchMappings()
     }
 
-    fun addMapping() {
-        realm.writeBlocking {
-            copyToRealm(KeywordMapping().apply {
-                keyword = ""
-                categoryName = ""
-            })
-        }
-        fetchMappings()
+fun addMapping(mapping: KeywordMapping) {
+    realm.writeBlocking {
+        copyToRealm(mapping) // ✅ Actually use the passed object
     }
+    fetchMappings()
+}
+
+
 
     fun deleteMapping(mapping: KeywordMapping) {
         realm.writeBlocking {

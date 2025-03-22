@@ -3,10 +3,12 @@ package com.example.money.utils
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.example.money.models.Category
+import com.example.money.models.KeywordMapping
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import io.realm.kotlin.Realm
+import io.realm.kotlin.ext.query
 
 data class ParsedTransaction(
     val amount: Double,
@@ -91,275 +93,147 @@ object SmsParser {
     private fun parseDateFromDdMMyyyy(dateStr: String): LocalDate =
         LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 }
+
+//fun mapMerchantToCategory(
+//    merchant: String,
 //
-//fun mapMerchantToCategory(merchant: String, allCategories: List<Category>): Category {
+//    realm: Realm
+//): Category {
 //    val mappings = mapOf(
 //        // 🛒 Food & Dining
-//        "zomato" to "Food",
-//        "swiggy" to "Food",
-//        "dominos" to "Food",
-//        "mcdonalds" to "Food",
-//        "pizza hut" to "Food",
-//        "ubereats" to "Food",
-//        "kfc" to "Food",
-//        "burger king" to "Food",
-//        "cafecoffee" to "Food",
-//        "starbucks" to "Food",
+//        "zomato" to "Food", "swiggy" to "Food", "dominos" to "Food", "mcdonalds" to "Food",
+//        "pizza hut" to "Food", "ubereats" to "Food", "kfc" to "Food", "burger king" to "Food",
+//        "cafecoffee" to "Food", "starbucks" to "Food",
 //
 //        // 🚗 Transport
-//        "uber" to "Transport",
-//        "ola" to "Transport",
-//        "rapido" to "Transport",
-//        "redbus" to "Transport",
-//        "blablacar" to "Transport",
-//        "chalo" to "Transport",
-//        "irctc" to "Transport",
-//        "railways" to "Transport",
+//        "uber" to "Transport", "ola" to "Transport", "rapido" to "Transport", "redbus" to "Transport",
+//        "blablacar" to "Transport", "chalo" to "Transport", "irctc" to "Transport", "railways" to "Transport",
 //
 //        // 🛍️ Shopping
-//        "amazon" to "Shopping",
-//        "flipkart" to "Shopping",
-//        "myntra" to "Shopping",
-//        "ajio" to "Shopping",
-//        "nykaa" to "Shopping",
-//        "meesho" to "Shopping",
-//        "snapdeal" to "Shopping",
+//        "amazon" to "Shopping", "flipkart" to "Shopping", "myntra" to "Shopping", "ajio" to "Shopping",
+//        "nykaa" to "Shopping", "meesho" to "Shopping", "snapdeal" to "Shopping",
 //
 //        // 🎬 Entertainment
-//        "netflix" to "Entertainment",
-//        "hotstar" to "Entertainment",
-//        "prime video" to "Entertainment",
-//        "spotify" to "Entertainment",
-//        "gaana" to "Entertainment",
-//        "zee5" to "Entertainment",
-//        "bookmyshow" to "Entertainment",
-//        "sonyliv" to "Entertainment",
-//
+//        "netflix" to "Entertainment", "hotstar" to "Entertainment", "prime video" to "Entertainment",
+//        "spotify" to "Entertainment", "gaana" to "Entertainment", "zee5" to "Entertainment",
+//        "bookmyshow" to "Entertainment", "sonyliv" to "Entertainment",
 //
 //        // 🧾 Bills
-//        "electricity" to "Bills",
-//        "recharge" to "Bills",
-//        "broadband" to "Bills",
-//        "airtel" to "Bills",
-//        "jio" to "Bills",
-//        "bsnl" to "Bills",
-//        "datacard" to "Bills",
-//        "tatasky" to "Bills",
-//        "dth" to "Bills",
-//        "postpaid" to "Bills",
+//        "electricity" to "Bills", "recharge" to "Bills", "broadband" to "Bills", "airtel" to "Bills",
+//        "jio" to "Bills", "bsnl" to "Bills", "datacard" to "Bills", "tatasky" to "Bills",
+//        "dth" to "Bills", "postpaid" to "Bills",
 //
 //        // ✈️ Travel
-//        "irctc" to "Travel",
-//        "makemytrip" to "Travel",
-//        "goibibo" to "Travel",
-//        "yatra" to "Travel",
-//        "airindia" to "Travel",
-//        "indigo" to "Travel",
-//        "vistara" to "Travel",
-//        "cleartrip" to "Travel",
+//        "makemytrip" to "Travel", "goibibo" to "Travel", "yatra" to "Travel", "airindia" to "Travel",
+//        "indigo" to "Travel", "vistara" to "Travel", "cleartrip" to "Travel",
 //
 //        // 💼 Income
-//        "salary" to "Income",
-//        "stipend" to "Income",
-//        "credit" to "Income",
-//        "deltecs" to "Income",
-//        "rebate" to "Income",
-//        "incentive" to "Income",
-//        "bonus" to "Income",
-//        "refund" to "Income",
+//        "salary" to "Income", "stipend" to "Income", "credit" to "Income", "deltecs" to "Income",
+//        "rebate" to "Income", "incentive" to "Income", "bonus" to "Income", "refund" to "Income",
 //
 //        // 🏧 ATM & Cash
-//        "atm" to "Cash Withdrawal",
-//        "cash" to "Cash Withdrawal",
+//        "atm" to "Cash Withdrawal", "cash" to "Cash Withdrawal",
 //
 //        // 🔄 Transfers
-//        "upi" to "Transfers",
-//        "neft" to "Transfers",
-//        "rtgs" to "Transfers",
-//        "imps" to "Transfers",
-//        "phonepe" to "Transfers",
-//        "gpay" to "Transfers",
-//        "google pay" to "Transfers",
-//        "paytm" to "Transfers",
+//        "upi" to "Transfers", "neft" to "Transfers", "rtgs" to "Transfers", "imps" to "Transfers",
+//        "phonepe" to "Transfers", "gpay" to "Transfers", "google pay" to "Transfers", "paytm" to "Transfers",
 //        "bhim" to "Transfers",
 //
 //        // 🏥 Health
-//        "pharmacy" to "Health",
-//        "medplus" to "Health",
-//        "apollo" to "Health",
-//        "practo" to "Health",
-//        "1mg" to "Health",
-//        "pharmeasy" to "Health",
+//        "pharmacy" to "Health", "medplus" to "Health", "apollo" to "Health", "practo" to "Health",
+//        "1mg" to "Health", "pharmeasy" to "Health",
+//
+//        // 🧑‍🎓 Scholarship
 //        "govt" to "Scholarship",
 //
 //        // 🏠 Rent
-//        "rent" to "Rent",
-//        "no broker" to "Rent",
-//        "housing.com" to "Rent"
+//        "rent" to "Rent", "no broker" to "Rent", "housing.com" to "Rent"
 //    )
 //
-////    val mappedName = mappings.entries.firstOrNull { merchant.contains(it.key, ignoreCase = true) }?.value
-////    return allCategories.firstOrNull { it.name.equals(mappedName, ignoreCase = true) }
-////        ?: allCategories.firstOrNull { it.name.equals("Uncategorized", ignoreCase = true) }
-////        ?: Category.create("Uncategorized", Color.Gray)
-////    val matchedCategory = mappings.entries.firstOrNull { (keyword, _) ->
-////        merchant.contains(keyword, ignoreCase = true)
-////    }?.value ?: "Uncategorized"
+////    val matchedCategoryName = mappings.entries
+////        .firstOrNull { (keyword, _) -> merchant.contains(keyword, ignoreCase = true) }
+////        ?.value ?: "Uncategorized"
 ////
-////    return allCategories.firstOrNull { it.name.equals(matchedCategory, ignoreCase = true) }
-////        ?: allCategories.firstOrNull { it.name.equals("Uncategorized", ignoreCase = true) }
-////        ?: Category.create("Uncategorized", Color.Gray)
-//    val matchedCategoryName = mappings.entries.firstOrNull { (keyword, _) ->
-//        merchant.contains(keyword, ignoreCase = true)
-//    }?.value ?: "Uncategorized"
+////    val existingCategory = allCategories.firstOrNull {
+////        it.name.equals(matchedCategoryName, ignoreCase = true)
+////    }
+////    if (existingCategory != null) return existingCategory
+////
+////    val uncategorized = allCategories.firstOrNull {
+////        it.name.equals("Uncategorized", ignoreCase = true)
+////    }
+////    if (matchedCategoryName == "Uncategorized" || uncategorized != null) {
+////        return uncategorized ?: Category(name = "Uncategorized", color = Color.Gray)
+////    }
+////    else{
+////    val newCategory = Category(name = matchedCategoryName, color = generateColorForCategory(matchedCategoryName))
+////    realm.writeBlocking {
+////        copyToRealm(newCategory)
+////    }
+////    return newCategory}
+//    val matchedCategoryName = mappings.entries
+//        .firstOrNull { (keyword, _) -> merchant.contains(keyword, ignoreCase = true) }
+//        ?.value ?: "Uncategorized"
 //
-//    return allCategories.firstOrNull {
-//        it.name.equals(matchedCategoryName, ignoreCase = true)
-//    } ?: allCategories.firstOrNull {
-//        it.name.equals("Uncategorized", ignoreCase = true)
-//    } ?: Category(name = "Uncategorized", _colorValue = Color.Gray.toString())
+//// 1. Check Realm for an existing category with that name
+//    val existingCategory = realm.query<Category>("name == $0", matchedCategoryName).first().find()
+//    if (existingCategory != null) return existingCategory
+//
+//// 2. If matched is "Uncategorized", return existing or create
+//    if (matchedCategoryName.equals("Uncategorized", ignoreCase = true)) {
+//        val uncategorized = realm.query<Category>("name == $0", "Uncategorized").first().find()
+//        return uncategorized ?: realm.writeBlocking {
+//            copyToRealm(Category(name = "Uncategorized", color = Color.Gray))
+//        }
+//    }
+//
+//// 3. No match found: Create and persist a new category in Realm
+//    val newCategory = Category(
+//        name = matchedCategoryName,
+//        color = generateColorForCategory(matchedCategoryName)
+//    )
+//
+//    realm.writeBlocking {
+//        copyToRealm(newCategory)
+//    }
+//
+//    return newCategory
+//
 //}
-
 
 
 fun mapMerchantToCategory(
     merchant: String,
-    allCategories: List<Category>, realm: Realm
+    realm: Realm
 ): Category {
-    val mappings = mapOf(
-         //🛒 Food & Dining
-        "zomato" to "Food",
-        "swiggy" to "Food",
-        "dominos" to "Food",
-        "mcdonalds" to "Food",
-        "pizza hut" to "Food",
-        "ubereats" to "Food",
-        "kfc" to "Food",
-        "burger king" to "Food",
-        "cafecoffee" to "Food",
-        "starbucks" to "Food",
+    // 1. Normalize merchant input
+    val normalizedMerchant = merchant.lowercase()
 
-        // 🚗 Transport
-        "uber" to "Transport",
-        "ola" to "Transport",
-        "rapido" to "Transport",
-        "redbus" to "Transport",
-        "blablacar" to "Transport",
-        "chalo" to "Transport",
-        "irctc" to "Transport",
-        "railways" to "Transport",
+    // 2. Find matching keyword from stored mappings
+    val allMappings = realm.query<KeywordMapping>().find()
+    val matchedMapping = allMappings.firstOrNull {
+        normalizedMerchant.contains(it.keyword.lowercase())
+    }
 
-        // 🛍️ Shopping
-        "amazon" to "Shopping",
-        "flipkart" to "Shopping",
-        "myntra" to "Shopping",
-        "ajio" to "Shopping",
-        "nykaa" to "Shopping",
-        "meesho" to "Shopping",
-        "snapdeal" to "Shopping",
+    val categoryName = matchedMapping?.categoryName ?: "Uncategorized"
 
-        // 🎬 Entertainment
-        "netflix" to "Entertainment",
-        "hotstar" to "Entertainment",
-        "prime video" to "Entertainment",
-        "spotify" to "Entertainment",
-        "gaana" to "Entertainment",
-        "zee5" to "Entertainment",
-        "bookmyshow" to "Entertainment",
-        "sonyliv" to "Entertainment",
+    // 3. Try to find existing category by name
+    val existingCategory = realm.query<Category>("name == $0", categoryName).first().find()
+    if (existingCategory != null) return existingCategory
 
-
-        // 🧾 Bills
-        "electricity" to "Bills",
-        "recharge" to "Bills",
-        "broadband" to "Bills",
-        "airtel" to "Bills",
-        "jio" to "Bills",
-        "bsnl" to "Bills",
-        "datacard" to "Bills",
-        "tatasky" to "Bills",
-        "dth" to "Bills",
-        "postpaid" to "Bills",
-
-        // ✈️ Travel
-        "irctc" to "Travel",
-        "makemytrip" to "Travel",
-        "goibibo" to "Travel",
-        "yatra" to "Travel",
-        "airindia" to "Travel",
-        "indigo" to "Travel",
-        "vistara" to "Travel",
-        "cleartrip" to "Travel",
-
-        // 💼 Income
-        "salary" to "Income",
-        "stipend" to "Income",
-        "credit" to "Income",
-        "deltecs" to "Income",
-        "rebate" to "Income",
-        "incentive" to "Income",
-        "bonus" to "Income",
-        "refund" to "Income",
-
-        // 🏧 ATM & Cash
-        "atm" to "Cash Withdrawal",
-        "cash" to "Cash Withdrawal",
-
-        // 🔄 Transfers
-        "upi" to "Transfers",
-        "neft" to "Transfers",
-        "rtgs" to "Transfers",
-        "imps" to "Transfers",
-        "phonepe" to "Transfers",
-        "gpay" to "Transfers",
-        "google pay" to "Transfers",
-        "paytm" to "Transfers",
-        "bhim" to "Transfers",
-
-        // 🏥 Health
-        "pharmacy" to "Health",
-        "medplus" to "Health",
-        "apollo" to "Health",
-        "practo" to "Health",
-        "1mg" to "Health",
-        "pharmeasy" to "Health",
-        "govt" to "Scholarship",
-
-        // 🏠 Rent
-        "rent" to "Rent",
-        "no broker" to "Rent",
-        "housing.com" to "Rent"
+    // 4. Create and persist if not found (including "Uncategorized")
+    val newCategory = Category(
+        name = categoryName,
+        color = generateColorForCategory(categoryName)
     )
 
-    val matchedCategoryName = mappings.entries.firstOrNull { (keyword, _) ->
-        merchant.contains(keyword, ignoreCase = true)
-    }?.value ?: "Uncategorized"
-
-    val existingCategory = allCategories.firstOrNull {
-        it.name.equals(matchedCategoryName, ignoreCase = true)
-    }
-
-    if (existingCategory != null) {
-        return existingCategory
-    }
-
-    // Check if "Uncategorized" exists
-    val uncategorized = allCategories.firstOrNull {
-        it.name.equals("Uncategorized", ignoreCase = true)
-    }
-    if (matchedCategoryName == "Uncategorized" || uncategorized != null) {
-        return uncategorized ?: Category(name = "Uncategorized", color = Color.Gray)
-    }
-
-    // Otherwise: Dynamically create and persist new Category
-    val newCategory = Category(name = matchedCategoryName, color = generateColorForCategory(matchedCategoryName))
-
-    realm.writeBlocking {
+    return realm.writeBlocking {
         copyToRealm(newCategory)
     }
-
-    return newCategory
 }
+
+
+
 
 
 

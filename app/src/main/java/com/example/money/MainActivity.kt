@@ -149,6 +149,7 @@ import com.example.money.pages.Add
 import com.example.money.pages.AnalyticsPage
 import com.example.money.pages.Categories
 import com.example.money.pages.Expenses
+import com.example.money.pages.KeywordMappingEditor
 import com.example.money.pages.OnboardingScreens.OnBoardingScreen
 import com.example.money.pages.Reports
 import com.example.money.pages.Settings
@@ -157,6 +158,7 @@ import com.example.money.utils.SmsParser
 import com.example.money.utils.mapMerchantToCategory
 import com.example.money.viewmodels.CurrencyViewModel
 import com.example.money.viewmodels.ExpensesViewModel
+import com.example.money.viewmodels.KeywordMappingViewModel
 import com.example.money.viewmodels.OnboardingViewModel
 import com.example.money.viewmodels.ReportsViewModel
 import kotlinx.coroutines.launch
@@ -201,6 +203,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             seedDefaultCategoriesIfNeeded(applicationContext)
+            seedDefaultKeywordMappingsIfEmpty(applicationContext)
         }
         enableEdgeToEdge()
 
@@ -236,6 +239,7 @@ class MainActivity : ComponentActivity() {
                         )
                     } // Loads Bottom Navigation
                     composable("settings/categories") { Categories(navController) }
+                    composable ("settings/keyword"){ KeywordMappingEditor(navController , viewModel = KeywordMappingViewModel())  }
                 }
 
             }
@@ -284,7 +288,7 @@ fun MainScreen(navController: NavController, currencyViewModel: CurrencyViewMode
                         currencyViewModel
                     )
                 }
-                composable("reports") { Reports(vm = ReportsViewModel(), currencyViewModel) }
+                //composable("reports") { Reports(vm = ReportsViewModel(), currencyViewModel) }
                 composable("add") { Add(navController) }
                 composable("analytics") {
                     AnalyticsPage(navController = bottomNavController, expenses = expensesList)
@@ -311,17 +315,17 @@ fun BottomNavigationBar(navController: NavController) {
                 )
             }
         )
-        NavigationBarItem(
-            selected = backStackEntry?.destination?.route == "reports",
-            onClick = { navController.navigate("reports") },
-            label = { Text("Reports") },
-            icon = {
-                Icon(
-                    painterResource(id = R.drawable.bar_chart),
-                    contentDescription = "Reports"
-                )
-            }
-        )
+//        NavigationBarItem(
+//            selected = backStackEntry?.destination?.route == "reports",
+//            onClick = { navController.navigate("reports") },
+//            label = { Text("Reports") },
+//            icon = {
+//                Icon(
+//                    painterResource(id = R.drawable.bar_chart),
+//                    contentDescription = "Reports"
+//                )
+//            }
+//        )
         NavigationBarItem(
             selected = backStackEntry?.destination?.route == "analytics",
             onClick = { navController.navigate("analytics") },
@@ -354,7 +358,7 @@ fun readSmsInbox(context: Context): List<Expense> {
     val expenses = mutableListOf<Expense>()
     val uri: Uri = Uri.parse("content://sms/inbox")
     val projection = arrayOf("_id", "address", "date", "body")
-    val allCategories = db.query(Category::class).find()
+
 
     val cursor: Cursor? = context.contentResolver.query(uri, projection, null, null, "date DESC")
     cursor?.use {
@@ -373,7 +377,7 @@ fun readSmsInbox(context: Context): List<Expense> {
                         note = "Transaction with ${parsedTransaction.merchant}",
                         category = mapMerchantToCategory(
                             parsedTransaction.merchant,
-                            allCategories, db
+                             db
                         ) // You can map it dynamically
                     )
                 }

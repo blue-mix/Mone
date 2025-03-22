@@ -9,10 +9,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +33,7 @@ import com.example.money.ui.theme.BackgroundElevated
 import com.example.money.ui.theme.DividerColor
 import com.example.money.ui.theme.Shapes
 import com.example.money.ui.theme.TopAppBarBackground
+import com.example.money.viewmodels.KeywordMappingViewModel
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.launch
 
@@ -42,6 +45,9 @@ fun Settings(navController: NavController) {
     var deleteConfirmationShowing by remember {
         mutableStateOf(false)
     }
+
+    val showBottomSheet = remember { mutableStateOf(false) }
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val eraseAllData: () -> Unit = {
         coroutineScope.launch {
@@ -81,6 +87,22 @@ fun Settings(navController: NavController) {
                         modifier = Modifier.clickable {
                             navController.navigate("settings/categories")
                         })
+                    TableRow(
+                        label = "Keywords",
+                        hasArrow = true,
+                        modifier = Modifier.clickable {
+                            navController.navigate("settings/keyword")
+                            showBottomSheet.value = true})
+
+                    if (showBottomSheet.value) {
+                        ModalBottomSheet(
+                            onDismissRequest = { showBottomSheet.value = false },
+                            sheetState = bottomSheetState
+                        ) {
+                            KeywordMappingEditor(navController, viewModel = KeywordMappingViewModel())
+                        }
+                    }
+
                     Divider(
                         modifier = Modifier
                             .padding(start = 16.dp), thickness = 1.dp, color = DividerColor

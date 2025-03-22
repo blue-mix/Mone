@@ -65,10 +65,9 @@ fun Expenses(
         mutableStateOf(false)
     }
 
-    // 👇 At the top of your composable
     var selectedFilter by remember { mutableStateOf(TransactionFilterOption.ALL) }
 
-    val allExpenses = (state.expenses + expensesList).distinctBy { it.note + it.date }
+    val allExpenses = (state.expenses + expensesList).distinctBy { it.note + it.date +it.amount}
 
 // 👇 Filter based on transaction type
     val filteredExpenses = when (selectedFilter) {
@@ -85,14 +84,6 @@ fun Expenses(
     val totalSum = filteredExpensesForSum.sumOf { it.amount }
 
     Scaffold(
-//        topBar = {
-//            MediumTopAppBar(
-//                title = { Text("Expenses") },
-//                colors = TopAppBarDefaults.mediumTopAppBarColors(
-//                    containerColor = TopAppBarBackground
-//                )
-//            )
- //       },
 topBar = {
         MediumTopAppBar(
             title = { Text("Expenses", style = MaterialTheme.typography.titleLarge) },

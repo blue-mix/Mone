@@ -1,4 +1,4 @@
-package com.example.money.components
+package com.example.money.components.custom
 
 import androidx.compose.foundation.layout.padding
 import com.example.money.ui.theme.Shapes
@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.money.models.Category
+import com.example.money.data.models.Category
 
 @Composable
 fun CategoryBadge(category: Category, modifier: Modifier = Modifier) {

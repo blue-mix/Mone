@@ -1,6 +1,6 @@
 package com.example.money.utils
 
-import com.example.money.models.Recurrence
+import com.example.money.data.models.Recurrence
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth

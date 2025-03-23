@@ -4,16 +4,14 @@ package com.example.money.pages
 
 import com.example.money.R
 import com.example.money.components.charts.Charts
-import com.example.money.models.Recurrence
+import com.example.money.data.models.Recurrence
 import com.example.money.viewmodels.AnalyticsViewModel
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
@@ -39,7 +37,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavController
-import com.example.money.models.Expense
+import com.example.money.data.models.Expense
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

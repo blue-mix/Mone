@@ -2,9 +2,8 @@ package com.example.money.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import com.example.money.models.Expense
-import com.example.money.models.Recurrence
-import com.example.money.pages.filterExpensesByRecurrence
+import com.example.money.data.models.Expense
+import com.example.money.data.models.Recurrence
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -62,8 +62,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.dimrnhhh.moneytopia.components.charts.rememberMarker
-import com.example.money.models.Expense
-import com.example.money.models.groupedByDayOfMonth
+import com.example.money.data.models.Expense
+import com.example.money.data.models.groupedByDayOfMonth
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart

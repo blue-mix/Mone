@@ -2,10 +2,10 @@ package com.example.money.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.money.db
-import com.example.money.models.Category
-import com.example.money.models.Expense
-import com.example.money.models.Recurrence
+import com.example.money.data.db
+import com.example.money.data.models.Category
+import com.example.money.data.models.Expense
+import com.example.money.data.models.Recurrence
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.Dispatchers

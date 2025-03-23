@@ -89,7 +89,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dimrnhhh.moneytopia.components.charts.rememberMarker
-import com.example.money.models.Expense
+import com.example.money.data.models.Expense
 import com.example.money.R
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
@@ -106,7 +106,7 @@ import com.patrykandpatrick.vico.core.chart.line.LineChart.LineSpec
 import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
 import com.patrykandpatrick.vico.core.component.text.textComponent
 import com.patrykandpatrick.vico.core.entry.entryModelOf
-import com.example.money.models.groupedByDayOfWeek
+import com.example.money.data.models.groupedByDayOfWeek
 
 @Composable
 fun WeeklyChart(

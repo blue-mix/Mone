@@ -115,8 +115,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.money.R
-import com.example.money.models.Expense
-import com.example.money.models.groupedByMonth
+import com.example.money.data.models.Expense
+import com.example.money.data.models.groupedByMonth
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart

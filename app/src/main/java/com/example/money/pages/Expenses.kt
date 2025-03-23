@@ -3,19 +3,29 @@ package com.example.money.pages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.TrendingDown
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -27,16 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.money.components.PickerTrigger
-import com.example.money.components.expensesList.ExpensesList
-import com.example.money.models.Expense
-import com.example.money.models.Recurrence
-import com.example.money.models.TransactionFilterOption
-import com.example.money.readSmsInbox
+import com.example.money.components.custom.PickerTrigger
+import com.example.money.components.expenses.ExpensesList
+import com.example.money.data.models.Expense
+import com.example.money.data.models.Recurrence
+import com.example.money.data.models.TransactionFilterOption
 import com.example.money.ui.theme.LabelSecondary
 import com.example.money.ui.theme.TopAppBarBackground
 import com.example.money.ui.theme.Typography
@@ -91,15 +99,24 @@ topBar = {
                 containerColor = TopAppBarBackground
             )
         )
-    },
+    }, floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text("Add Expense") },
+                icon = { Icon(Icons.Filled.Add, contentDescription = "Add") },
+                onClick = { navController.navigate("add") },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+
+            )
+        },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Recurrence Picker Row
                 Row(
@@ -124,6 +141,7 @@ topBar = {
                         recurrences.forEach { recurrence ->
                             DropdownMenuItem(
                                 text = { Text(recurrence.target) },
+                                leadingIcon = { Icon(Icons.Default.CalendarToday, contentDescription = null) },
                                 onClick = {
                                     vm.setRecurrence(recurrence)
                                     recurrenceMenuOpened = false
@@ -133,23 +151,28 @@ topBar = {
                     }
                 }
 
-                Row(
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(top = 8.dp)
+                Surface(
+                    tonalElevation = 2.dp,
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = "₹",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = LabelSecondary
-                    )
-
-                    Text(
-                        text = DecimalFormat("##,##,###.##").format(totalSum),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = if (totalSum<0)  Color.Red else Color.Green
-                    )
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Total:", style = Typography.bodyLarge)
+                        Row {
+                            Text("₹", style = Typography.titleMedium, color = LabelSecondary)
+                            Text(
+                                text = DecimalFormat("##,##,###.##").format(totalSum),
+                                style = Typography.titleMedium,
+                                color = if (totalSum < 0)  Color(0xFFD32F2F) else Color(0xFF2E7D32) // rich green
+                            )
+                        }
+                    }
                 }
+
 
                 TransactionFilterSegmentedButton(
                     selectedOption = selectedFilter,
@@ -164,7 +187,7 @@ topBar = {
                     expenses = filteredExpenses,
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(
+                    .verticalScroll(
                             rememberScrollState()
                         ), currencyViewModel
                 )
@@ -192,7 +215,6 @@ fun filterExpensesByRecurrence(expenses: List<Expense>, recurrence: Recurrence):
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionFilterSegmentedButton(
     selectedOption: TransactionFilterOption,
@@ -206,7 +228,14 @@ fun TransactionFilterSegmentedButton(
             SegmentedButton(
                 selected = option == selectedOption,
                 onClick = { onOptionSelected(option) },
-                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
+                shape = SegmentedButtonDefaults.itemShape(index, options.size),
+                icon = {
+                    when (option) {
+                        TransactionFilterOption.ALL -> Icon(Icons.Default.FilterList, null)
+                        TransactionFilterOption.DEBITS -> Icon(Icons.Default.TrendingDown, null)
+                        TransactionFilterOption.CREDITS -> Icon(Icons.Default.TrendingUp, null)
+                    }
+                },
                 label = { Text(option.label) }
             )
         }

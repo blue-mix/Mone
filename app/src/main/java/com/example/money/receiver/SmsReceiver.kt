@@ -1,4 +1,4 @@
-package com.example.money
+package com.example.money.receiver
 
 
 
@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
-import android.telephony.SmsMessage
 import android.util.Log
 import android.widget.Toast
 
@@ -22,7 +21,6 @@ class SmsReceiver : BroadcastReceiver() {
                 Log.d("SmsReceiver", "SMS received from: $sender")
                 Log.d("SmsReceiver", "Message: $messageBody")
 
-                // Here you can trigger further actions like parsing the SMS for transactions
             }
         }
     }

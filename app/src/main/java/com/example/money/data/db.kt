@@ -1,10 +1,10 @@
-package com.example.money
+package com.example.money.data
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
-import com.example.money.models.Category
-import com.example.money.models.Expense
-import com.example.money.models.KeywordMapping
+import com.example.money.data.models.Category
+import com.example.money.data.models.Expense
+import com.example.money.data.models.KeywordMapping
 import com.example.money.data.datastore.AppPreferences
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration

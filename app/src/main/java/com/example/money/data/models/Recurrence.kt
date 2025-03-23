@@ -1,4 +1,4 @@
-package com.example.money.models
+package com.example.money.data.models
 
 sealed class Recurrence(val name: String, val target: String) {
     object None : Recurrence("None", "None")

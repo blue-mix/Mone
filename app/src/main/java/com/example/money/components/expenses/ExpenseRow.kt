@@ -1,4 +1,4 @@
-package com.example.money.components
+package com.example.money.components.expenses
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,21 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.money.models.Expense
-import com.example.money.ui.theme.LabelSecondary
+import com.example.money.components.custom.CategoryBadge
+import com.example.money.data.models.Expense
 import com.example.money.ui.theme.Typography
-import com.example.money.viewmodels.CurrencyViewModel
-import java.text.NumberFormat
-import java.time.format.DateTimeFormatter
-import java.util.Currency
-import java.util.Locale
 
 @Composable
 fun ExpenseRow(expense: Expense, modifier: Modifier = Modifier) {
@@ -31,10 +23,6 @@ fun ExpenseRow(expense: Expense, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-//            Text(
-//                expense.note ?: expense.category!!.name,
-//                style = Typography.headlineMedium
-//            )
             Text(
                 text = expense.note ?: expense.category?.name.orEmpty(),
                 style = Typography.headlineMedium,
@@ -49,7 +37,7 @@ fun ExpenseRow(expense: Expense, modifier: Modifier = Modifier) {
                 text = "₹${String.format("%.2f", expense.amount)}",
 //                text = formattedAmount,
                 style = Typography.headlineMedium,
-                color = if (expense.amount < 0) Color.Red else Color.Green
+                color = if (expense.amount < 0)  Color(0xFFD32F2F) else Color(0xFF2E7D32)
             )
         }
         Row(
@@ -59,11 +47,7 @@ fun ExpenseRow(expense: Expense, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CategoryBadge(category = expense.category!!)
-            Text(
-                expense.date.format(DateTimeFormatter.ofPattern("HH:mm")),
-                style = Typography.bodyMedium,
-                color = LabelSecondary
-            )
+
         }
     }
 }

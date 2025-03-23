@@ -1,19 +1,13 @@
-package com.example.money.components.expensesList
+package com.example.money.components.expenses
 
-import android.app.Application
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.money.components.ExpensesDayGroup
-import com.example.money.mock.mockExpenses
-import com.example.money.models.Expense
-import com.example.money.models.groupedByDay
-import com.example.money.ui.theme.MoneyTheme
+import com.example.money.data.models.Expense
+import com.example.money.data.models.groupedByDay
 import com.example.money.viewmodels.CurrencyViewModel
 
 

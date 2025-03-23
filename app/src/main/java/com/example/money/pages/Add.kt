@@ -41,9 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.money.components.TableRow
-import com.example.money.components.UnstyledTextField
-import com.example.money.models.Recurrence
+import com.example.money.components.custom.TableRow
+import com.example.money.components.custom.UnstyledTextField
+import com.example.money.data.models.Recurrence
 import com.example.money.ui.theme.BackgroundElevated
 import com.example.money.ui.theme.DividerColor
 import com.example.money.ui.theme.MoneyTheme

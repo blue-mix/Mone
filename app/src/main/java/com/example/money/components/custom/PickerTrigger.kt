@@ -1,4 +1,4 @@
-package com.example.money.components
+package com.example.money.components.custom
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Row

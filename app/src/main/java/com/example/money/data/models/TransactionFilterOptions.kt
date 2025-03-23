@@ -1,4 +1,4 @@
-package com.example.money.models
+package com.example.money.data.models
 
 enum class TransactionFilterOption(val label: String) {
     ALL("All"),

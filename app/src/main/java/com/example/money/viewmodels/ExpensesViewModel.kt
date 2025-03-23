@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.example.money.db
+import com.example.money.data.db
 import io.realm.kotlin.ext.query
-import com.example.money.models.Expense
-import com.example.money.models.Recurrence
+import com.example.money.data.models.Expense
+import com.example.money.data.models.Recurrence
 import com.example.money.utils.calculateDateRange
 
 

@@ -1,9 +1,9 @@
 package  com.example.money.mock
 
 import androidx.compose.ui.graphics.Color
-import com.example.money.models.Category
-import com.example.money.models.Expense
-import com.example.money.models.Recurrence
+import com.example.money.data.models.Category
+import com.example.money.data.models.Expense
+import com.example.money.data.models.Recurrence
 
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit

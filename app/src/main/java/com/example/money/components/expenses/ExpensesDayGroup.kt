@@ -1,6 +1,5 @@
-package com.example.money.components
+package com.example.money.components.expenses
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,22 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.money.models.DayExpenses
+import com.example.money.data.models.DayExpenses
 import com.example.money.ui.theme.LabelSecondary
 import com.example.money.ui.theme.Typography
 import com.example.money.utils.formatDay
-import com.example.money.viewmodels.CurrencyViewModel
-import java.lang.String.format
-import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.time.LocalDate
-import java.util.Currency
-import java.util.Locale
 
 
 @Composable
@@ -33,7 +23,7 @@ fun ExpensesDayGroup(
     dayExpenses: DayExpenses,
     modifier: Modifier = Modifier,
 
-) {
+    ) {
     val formattedTotal = "₹${String.format("%.2f", dayExpenses.total)}"
     Column(modifier = modifier) {
         Text(

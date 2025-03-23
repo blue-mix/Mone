@@ -141,10 +141,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.money.mock.getRandomColor
-import com.example.money.models.Category
-import com.example.money.models.Expense
-import com.example.money.models.Recurrence
+import com.example.money.data.db
+import com.example.money.data.models.Expense
+import com.example.money.data.models.Recurrence
+import com.example.money.data.seedDefaultCategoriesIfNeeded
+import com.example.money.data.seedDefaultKeywordMappingsIfEmpty
 import com.example.money.pages.Add
 import com.example.money.pages.AnalyticsPage
 import com.example.money.pages.Categories
@@ -240,6 +241,8 @@ class MainActivity : ComponentActivity() {
                     } // Loads Bottom Navigation
                     composable("settings/categories") { Categories(navController) }
                     composable ("settings/keyword"){ KeywordMappingEditor(navController , viewModel = KeywordMappingViewModel())  }
+                    composable("settings/currency"){}
+                    composable("add") { Add(navController) }
                 }
 
             }
@@ -374,7 +377,7 @@ fun readSmsInbox(context: Context): List<Expense> {
                         amount = if (parsedTransaction.type == "credit") parsedTransaction.amount else -parsedTransaction.amount,
                         date = it1.atStartOfDay(),  // Convert parsed date if needed
                         recurrence = Recurrence.None,
-                        note = "Transaction with ${parsedTransaction.merchant}",
+                        note = parsedTransaction.merchant,
                         category = mapMerchantToCategory(
                             parsedTransaction.merchant,
                              db

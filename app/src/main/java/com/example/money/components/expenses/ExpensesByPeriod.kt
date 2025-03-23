@@ -1,9 +1,8 @@
 package com.example.money.components.expenses
 
 import com.example.money.R
-import com.example.money.components.ExpensesDayGroup
-import com.example.money.models.Expense
-import com.example.money.models.groupedByDay
+import com.example.money.data.models.Expense
+import com.example.money.data.models.groupedByDay
 import com.example.money.utils.formatDay
 
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.money.viewmodels.CurrencyViewModel
 
 
 @Composable
@@ -31,7 +29,7 @@ fun ExpensesByPeriod(
     navController: NavController,
     expenses: List<Expense>,
 
-) {
+    ) {
     val groupedExpenses = expenses.groupedByDay()
 
     if(groupedExpenses.isNotEmpty()) {

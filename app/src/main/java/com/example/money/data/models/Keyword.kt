@@ -1,4 +1,4 @@
-package com.example.money.models
+package com.example.money.data.models
 
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey

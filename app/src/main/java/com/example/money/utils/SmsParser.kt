@@ -1,9 +1,8 @@
 package com.example.money.utils
 
 import android.util.Log
-import androidx.compose.ui.graphics.Color
-import com.example.money.models.Category
-import com.example.money.models.KeywordMapping
+import com.example.money.data.models.Category
+import com.example.money.data.models.KeywordMapping
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale

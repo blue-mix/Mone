@@ -2,9 +2,9 @@ package com.example.money.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.money.Database
-import com.example.money.models.Category
-import com.example.money.models.KeywordMapping
+import com.example.money.data.Database
+import com.example.money.data.models.Category
+import com.example.money.data.models.KeywordMapping
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

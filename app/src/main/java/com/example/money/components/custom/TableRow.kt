@@ -1,4 +1,4 @@
-package com.example.money.components
+package com.example.money.components.custom
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

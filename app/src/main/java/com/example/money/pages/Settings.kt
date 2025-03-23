@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.money.components.custom.TableRow
+import com.example.money.components.navigation.Routes
 import com.example.money.data.db
 import com.example.money.data.models.Category
 import com.example.money.data.models.Expense
@@ -73,14 +74,14 @@ fun Settings(navController: NavController) {
                     label = "Categories",
                     hasArrow = true,
                     modifier = Modifier.clickable {
-                        navController.navigate("settings/categories")
+                        navController.navigate(Routes.Categories.route)
                     }
                 )
                 TableRow(
                     label = "Keywords",
                     hasArrow = true,
                     modifier = Modifier.clickable {
-                        navController.navigate("settings/keyword")
+                        navController.navigate(Routes.Keywords.route)
                     }
                 )
                 TableRow(

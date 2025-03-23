@@ -1,117 +1,12 @@
 package com.example.money
 
-// Setup DataStore for onboarding preference
-//val Context.dataStore by preferencesDataStore(name = "settings")
-//
-//class MainActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        lifecycleScope.launch {
-//            val isFirstTime = checkIfFirstTime(this@MainActivity)
-//
-//            setContent {
-//                MoneyTheme {
-//                    val navController = rememberNavController()
-//                    val backStackEntry by navController.currentBackStackEntryAsState()
-//
-//                    var showBottomBar by rememberSaveable { mutableStateOf(true) }
-//
-//                    // Ensure showBottomBar updates only when the navigation changes
-//                    LaunchedEffect(backStackEntry?.destination?.route) {
-//                        showBottomBar =
-//                            backStackEntry?.destination?.route !in listOf("settings/categories")
-//                    }
-//                    Scaffold(
-//                        bottomBar = {
-//                            if (showBottomBar) {
-//                                BottomNavigationBar(navController)
-//                            }
-//                        },
-//                        content = { innerPadding ->
-//                            NavHost(
-//                                navController = navController,
-//                                startDestination = if (isFirstTime) "Onboarding" else "home",
-//                                modifier = Modifier.padding(innerPadding) // Apply padding globally
-//                            ) {
-//                                composable("home") { HomeScreen(navController) }
-//                                composable("Onboarding") { OnBoardingScreen(navController) }
-////                                composable("expenses") { Expenses(navController) }
-////                                composable("reports") { Reports() }
-////                                composable("add") { Add(navController) }
-////                                composable("settings") { Settings(navController) }
-////                                composable("settings/categories") { Categories(navController) }
-//                            }
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    }
-//
-//    // Function to check if onboarding is completed
-//    suspend fun checkIfFirstTime(context: Context): Boolean {
-//        val preferences = context.dataStore.data.first()
-//        return preferences[booleanPreferencesKey("onboarding_completed")] != true
-//    }
-//
-//    // Function to save onboarding completion state
-//    suspend fun saveOnboardingCompletion(context: Context) {
-//        context.dataStore.edit { settings ->
-//            settings[booleanPreferencesKey("onboarding_completed")] = true
-//        }
-//    }
-//
-//    @Composable
-//    fun BottomNavigationBar(navController: NavController) {
-//        val backStackEntry by navController.currentBackStackEntryAsState()
-//
-//        NavigationBar(containerColor = TopAppBarBackground) {
-//            NavigationBarItem(
-//                selected = backStackEntry?.destination?.route == "expenses",
-//                onClick = { navController.navigate("expenses") },
-//                label = { Text("Expenses") },
-//                icon = {
-//                    Icon(painterResource(id = R.drawable.upload), contentDescription = "Upload")
-//                }
-//            )
-//            NavigationBarItem(
-//                selected = backStackEntry?.destination?.route == "reports",
-//                onClick = { navController.navigate("reports") },
-//                label = { Text("Reports") },
-//                icon = {
-//                    Icon(painterResource(id = R.drawable.bar_chart), contentDescription = "Reports")
-//                }
-//            )
-//            NavigationBarItem(
-//                selected = backStackEntry?.destination?.route == "add",
-//                onClick = { navController.navigate("add") },
-//                label = { Text("Add") },
-//                icon = {
-//                    Icon(painterResource(id = R.drawable.add), contentDescription = "Add")
-//                }
-//            )
-//            NavigationBarItem(
-//                selected = backStackEntry?.destination?.route?.startsWith("settings") == true,
-//                onClick = { navController.navigate("settings") },
-//                label = { Text("Settings") },
-//                icon = {
-//                    Icon(
-//                        painterResource(id = R.drawable.settings_outlined),
-//                        contentDescription = "Settings"
-//                    )
-//                }
-//            )
-//        }
-//    }
-//}
+import BottomNavItem
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -119,7 +14,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -132,7 +26,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
@@ -141,6 +34,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import bottomNavItems
+import com.example.money.components.navigation.Routes
 import com.example.money.data.db
 import com.example.money.data.models.Expense
 import com.example.money.data.models.Recurrence
@@ -152,18 +47,16 @@ import com.example.money.pages.Categories
 import com.example.money.pages.Expenses
 import com.example.money.pages.KeywordMappingEditor
 import com.example.money.pages.OnboardingScreens.OnBoardingScreen
-
 import com.example.money.pages.Settings
 import com.example.money.ui.theme.MoneyTheme
 import com.example.money.utils.SmsParser
 import com.example.money.utils.mapMerchantToCategory
+import com.example.money.viewmodels.AddViewModel
 import com.example.money.viewmodels.CurrencyViewModel
 import com.example.money.viewmodels.ExpensesViewModel
 import com.example.money.viewmodels.KeywordMappingViewModel
 import com.example.money.viewmodels.OnboardingViewModel
-
 import kotlinx.coroutines.launch
-
 
 // DataStore for saving onboarding progress
 val Context.dataStore by preferencesDataStore(name = "settings")
@@ -219,30 +112,39 @@ class MainActivity : ComponentActivity() {
             val isFirstTime by onboardingViewModel.isFirstLaunch.collectAsState()
 
             MoneyTheme {
-                val navController = navController
-                val startDestination = if (isFirstTime) "onboarding" else "home"
+                val rootnavController = navController
+                val startDestination =
+                    if (!isFirstTime) Routes.Home.route else Routes.Onboarding.route
 
                 NavHost(
-                    navController = navController,
+                    navController = rootnavController,
                     startDestination = startDestination
                 ) {
-                    composable("onboarding") {
+                    composable(Routes.Onboarding.route) {
                         OnBoardingScreen(
                             navController,
                             onboardingViewModel,
                             currencyViewModel
                         )
                     }
-                    composable("home") {
-                        MainScreen(
-                            navController,
-                            currencyViewModel
+                    composable(Routes.Home.route) {
+                        MainScaffold(
+                            rootNavController = navController,
+                            currencyViewModel = currencyViewModel
                         )
-                    } // Loads Bottom Navigation
-                    composable("settings/categories") { Categories(navController) }
-                    composable ("settings/keyword"){ KeywordMappingEditor(navController , viewModel = KeywordMappingViewModel())  }
-                    composable("settings/currency"){}
-                    composable("add") { Add(navController) }
+                    }
+                    composable(Routes.Categories.route) {
+                        Categories(rootnavController)
+                    }
+                    composable(Routes.Keywords.route) {
+                        KeywordMappingEditor(
+                            rootnavController,
+                            viewModel = KeywordMappingViewModel()
+                        )
+                    }
+                    composable(Routes.Add.route) {
+                        Add(navController, vm = AddViewModel())
+                    }
                 }
 
             }
@@ -255,16 +157,17 @@ class MainActivity : ComponentActivity() {
 
 //  Main Screen with Bottom Navigation
 @Composable
-fun MainScreen(navController: NavController, currencyViewModel: CurrencyViewModel) {
-    val bottomNavController = rememberNavController()
-    val backStackEntry by bottomNavController.currentBackStackEntryAsState()
+fun MainScaffold(rootNavController: NavController, currencyViewModel: CurrencyViewModel) {
+    val navController = rememberNavController()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = backStackEntry?.destination?.route
 
     val expensesList = remember { mutableStateListOf<Expense>() }
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         val fetchedExpenses = readSmsInbox(context)
-        Log.d("SMS_Expenses", "Fetched transactions: ${fetchedExpenses.size}") // Debug Log
+//        Log.d("SMS_Expenses", "Fetched transactions: ${fetchedExpenses.size}") // Debug Log
         fetchedExpenses.forEach { expense ->
             if (expense !in expensesList) { // ✅ Prevent duplicates manually
                 expensesList.add(expense)
@@ -275,86 +178,38 @@ fun MainScreen(navController: NavController, currencyViewModel: CurrencyViewMode
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(bottomNavController)
+            BottomNavigationBar(navController = navController, items = bottomNavItems)
         },
         content = { innerPadding ->
             NavHost(
-                navController = bottomNavController,
-                startDestination = "expenses",
+                navController = navController,
+                startDestination = Routes.Expenses.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("expenses") {
+                composable(Routes.Expenses.route) {
                     Expenses(
-                        navController,
+                        rootNavController, // use rootNavController to navigate to global screens
                         expensesList,
                         vm = ExpensesViewModel(),
                         currencyViewModel
                     )
                 }
-                //composable("reports") { Reports(vm = ReportsViewModel(), currencyViewModel) }
-                composable("add") { Add(navController) }
-                composable("analytics") {
-                    AnalyticsPage(navController = bottomNavController, expenses = expensesList)
+
+                composable(Routes.Add.route) {
+                    Add(rootNavController)
                 }
-                composable("settings") { Settings(navController) }
+
+                composable(Routes.Analytics.route) {
+                    AnalyticsPage(navController, expensesList)
+                }
+
+                composable(Routes.Settings.route) {
+                    Settings(rootNavController)
+                }
+
             }
         }
     )
-}
-
-@Composable
-fun BottomNavigationBar(navController: NavController) {
-    val backStackEntry by navController.currentBackStackEntryAsState()
-
-    NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest) {
-        NavigationBarItem(
-            selected = backStackEntry?.destination?.route == "expenses",
-            onClick = { navController.navigate("expenses") },
-            label = { Text("Expenses") },
-            icon = {
-                Icon(
-                    painterResource(id = R.drawable.upload),
-                    contentDescription = "Expenses"
-                )
-            }
-        )
-//        NavigationBarItem(
-//            selected = backStackEntry?.destination?.route == "reports",
-//            onClick = { navController.navigate("reports") },
-//            label = { Text("Reports") },
-//            icon = {
-//                Icon(
-//                    painterResource(id = R.drawable.bar_chart),
-//                    contentDescription = "Reports"
-//                )
-//            }
-//        )
-        NavigationBarItem(
-            selected = backStackEntry?.destination?.route == "analytics",
-            onClick = { navController.navigate("analytics") },
-            label = { Text("Analytics") },
-            icon = {
-                Icon(painterResource(id = R.drawable.analytics), contentDescription = "Analytics")
-            }
-        )
-        NavigationBarItem(
-            selected = backStackEntry?.destination?.route == "add",
-            onClick = { navController.navigate("add") },
-            label = { Text("Add") },
-            icon = { Icon(painterResource(id = R.drawable.add), contentDescription = "Add") }
-        )
-        NavigationBarItem(
-            selected = backStackEntry?.destination?.route?.startsWith("settings") == true,
-            onClick = { navController.navigate("settings") },
-            label = { Text("Settings") },
-            icon = {
-                Icon(
-                    painterResource(id = R.drawable.settings_outlined),
-                    contentDescription = "Settings"
-                )
-            }
-        )
-    }
 }
 
 fun readSmsInbox(context: Context): List<Expense> {
@@ -380,7 +235,7 @@ fun readSmsInbox(context: Context): List<Expense> {
                         note = parsedTransaction.merchant,
                         category = mapMerchantToCategory(
                             parsedTransaction.merchant,
-                             db
+                            db
                         ) // You can map it dynamically
                     )
                 }
@@ -393,3 +248,174 @@ fun readSmsInbox(context: Context): List<Expense> {
     return expenses
 }
 
+
+@Composable
+fun BottomNavigationBar(
+    navController: NavController,
+    items: List<BottomNavItem>
+) {
+    val currentBackStack by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStack?.destination?.route
+
+    NavigationBar {
+        items.forEach { item ->
+            NavigationBarItem(
+                selected = currentRoute == item.route,
+                onClick = {
+                    if (currentRoute != item.route) {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationRoute ?: "") {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                },
+                icon = {
+                    Icon(
+                        imageVector = if (currentRoute == item.route) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = item.title
+                    )
+                },
+                label = { Text(item.title) }
+            )
+        }
+    }
+}
+
+
+//import androidx.compose.animation.AnimatedVisibility
+//import androidx.compose.animation.core.tween
+//import androidx.compose.animation.fadeIn
+//import androidx.compose.animation.fadeOut
+//import androidx.compose.animation.slideInVertically
+//import androidx.compose.animation.slideOutVertically
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.*
+//import androidx.compose.material.icons.outlined.*
+//import androidx.compose.material3.*
+//import androidx.compose.runtime.*
+//import androidx.compose.runtime.saveable.rememberSaveable
+//import androidx.navigation.NavGraph.Companion.findStartDestination
+//import androidx.navigation.compose.*
+//import com.example.money.pages.*
+
+
+//class MainActivity : ComponentActivity() {
+//
+//    @OptIn(ExperimentalMaterial3Api::class)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        enableEdgeToEdge()
+//
+//        setContent {
+//            MoneyTheme {
+//                val navController = rememberNavController()
+//                val backStackEntry by navController.currentBackStackEntryAsState()
+//
+//                val bottomBarVisible = rememberSaveable { mutableStateOf(true) }
+//                val fabVisible = rememberSaveable { mutableStateOf(true) }
+//
+//                // 👇 Change visibility based on current route
+//                when (backStackEntry?.destination?.route) {
+//                    Routes.Expenses.route -> {
+//                        bottomBarVisible.value = true
+//                        fabVisible.value = true
+//                    }
+//
+//                    Routes.Add.route -> {
+//                        bottomBarVisible.value = false
+//                        fabVisible.value = false
+//                    }
+//
+//                    Routes.Analytics.route, Routes.Settings.route -> {
+//                        bottomBarVisible.value = true
+//                        fabVisible.value = false
+//                    }
+//
+//                    Routes.Categories.route, Routes.Keywords.route -> {
+//                        bottomBarVisible.value = false
+//                        fabVisible.value = false
+//                    }
+//
+//                    else -> {
+//                        bottomBarVisible.value = false
+//                        fabVisible.value = false
+//                    }
+//                }
+//
+//                val items = listOf(
+//                    BottomNavItem("Expenses", Icons.Filled.AccountBalanceWallet, Icons.Outlined.AccountBalanceWallet, Routes.Expenses.route),
+//                    BottomNavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics, Routes.Analytics.route),
+//                    BottomNavItem("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, Routes.Settings.route)
+//                )
+//
+//                Scaffold(
+//                    floatingActionButton = {
+//                        AnimatedVisibility(
+//                            visible = fabVisible.value,
+//                            enter = fadeIn(tween(100)),
+//                            exit = fadeOut(tween(100))
+//                        ) {
+//                            FloatingActionButton(
+//                                onClick = { navController.navigate(Routes.Add.route) }
+//                            ) {
+//                                Icon(Icons.Default.Add, contentDescription = "Add Expense")
+//                            }
+//                        }
+//                    },
+//                    bottomBar = {
+//                        AnimatedVisibility(
+//                            visible = bottomBarVisible.value,
+//                            enter = slideInVertically(initialOffsetY = { it }),
+//                            exit = slideOutVertically(targetOffsetY = { it })
+//                        ) {
+//                            NavigationBar {
+//                                items.forEach { item ->
+//                                    NavigationBarItem(
+//                                        selected = backStackEntry?.destination?.route == item.route,
+//                                        onClick = {
+//                                            navController.navigate(item.route) {
+//                                                popUpTo(navController.graph.findStartDestination().id) {
+//                                                    saveState = true
+//                                                }
+//                                                launchSingleTop = true
+//                                                restoreState = true
+//                                            }
+//                                        },
+//                                        icon = {
+//                                            Icon(
+//                                                imageVector = if (backStackEntry?.destination?.route == item.route)
+//                                                    item.selectedIcon else item.unselectedIcon,
+//                                                contentDescription = item.title
+//                                            )
+//                                        },
+//                                        label = {
+//                                            Text(text = item.title)
+//                                        }
+//                                    )
+//                                }
+//                            }
+//                        }
+//                    }
+//                ) {
+//                    NavHost(
+//                        navController = navController,
+//                        startDestination = Routes.Expenses.route,
+//                        modifier = Modifier.padding(it),
+//                        enterTransition = { fadeIn(tween(150)) },
+//                        exitTransition = { fadeOut(tween(150)) }
+//                    ) {
+//                        composable(Routes.Expenses.route) { Expenses(navController) }
+//                        composable(Routes.Add.route) { AddExpense(navController) }
+//                        composable(Routes.Analytics.route) { AnalyticsPage(navController) }
+//                        composable(Routes.Settings.route) { Settings(navController) }
+//                        composable(Routes.Categories.route) { Categories(navController) }
+//                        composable(Routes.Keywords.route) { KeywordMappingEditor(navController, viewModel = KeywordMappingViewModel()) }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}

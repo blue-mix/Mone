@@ -42,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.money.components.custom.PickerTrigger
 import com.example.money.components.expenses.ExpensesList
+import com.example.money.components.navigation.Routes
 import com.example.money.data.models.Expense
 import com.example.money.data.models.Recurrence
 import com.example.money.data.models.TransactionFilterOption
@@ -103,7 +104,7 @@ topBar = {
             ExtendedFloatingActionButton(
                 text = { Text("Add Expense") },
                 icon = { Icon(Icons.Filled.Add, contentDescription = "Add") },
-                onClick = { navController.navigate("add") },
+                onClick = { navController.navigate(Routes.Add.route) },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
 

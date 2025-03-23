@@ -10,11 +10,6 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import kotlinx.coroutines.flow.first
 
-
-val config = RealmConfiguration.Builder(schema = setOf(Expense::class, Category::class))
-
-
-
 // Singleton Realm Database Instance
 object Database {
     private val config = RealmConfiguration.Builder(

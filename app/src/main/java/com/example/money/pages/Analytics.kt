@@ -1,75 +1,73 @@
 package com.example.money.pages
 
 
-
-import com.example.money.R
-import com.example.money.components.charts.Charts
-import com.example.money.data.models.Recurrence
-import com.example.money.viewmodels.AnalyticsViewModel
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.money.data.models.Expense
+import com.example.money.components.charts.Charts
+import com.example.money.components.navigation.Routes
+import com.example.money.data.models.Recurrence
+import com.example.money.ui.theme.TopAppBarBackground
+import com.example.money.viewmodels.AnalyticsViewModel
+import com.example.money.viewmodels.ExpensesViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AnalyticsPage(
     navController: NavController,
-    expenses: List<Expense>,
-    viewModel: AnalyticsViewModel = viewModel()
+    expensesViewModel: ExpensesViewModel = viewModel(),
+    analyticsViewModel: AnalyticsViewModel
 ) {
-    val analyticsViewModel: AnalyticsViewModel = viewModel()
-    LaunchedEffect(Unit) {
-        analyticsViewModel.setAllExpenses(expenses)
+    val analyticsState by analyticsViewModel.uiState.collectAsState()
+    val expensesState by expensesViewModel.uiState.collectAsState()
+    val allExpenses = expensesState.allExpenses
+    val recurrenceOptions = listOf("Weekly", "Monthly", "Yearly")
+    var selectedOpt by remember { mutableIntStateOf(recurrenceOptions.indexOf(analyticsState.recurrence.target)) }
+    val pageCount = when (analyticsState.recurrence) {
+        Recurrence.Weekly -> 53
+        Recurrence.Monthly -> 12
+        Recurrence.Yearly -> 1
+        else -> 53
     }
 
-    val uiState = viewModel.uiState.collectAsState().value
-    val recurrenceOpt = mutableListOf(
-        stringResource(R.string.recurrence_weekly),
-        stringResource(R.string.recurrence_monthly),
-        stringResource(R.string.recurrence_yearly)
-    )
-    var selectedOpt by remember {
-        mutableIntStateOf(0)
-    }
+    val pagerState = rememberPagerState(pageCount = { pageCount })
+
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
+
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Analytics") },
-                navigationIcon = {
-                    Icon(Icons.Filled.Analytics, contentDescription = null)
-                }
+            MediumTopAppBar(
+                title = { Text("Analytics", style = MaterialTheme.typography.titleLarge) },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = TopAppBarBackground)
             )
-        }
+        },
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -79,53 +77,56 @@ fun AnalyticsPage(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             SingleChoiceSegmentedButtonRow {
-                recurrenceOpt.forEachIndexed { index, it ->
+                recurrenceOptions.forEachIndexed { index, label ->
                     SegmentedButton(
                         selected = selectedOpt == index,
                         onClick = {
                             selectedOpt = index
-                            when(index) {
-                                0 -> viewModel.setRecurrence(Recurrence.Weekly)
-                                1 -> viewModel.setRecurrence(Recurrence.Monthly)
-                                2 -> viewModel.setRecurrence(Recurrence.Yearly)
-                                else -> viewModel.setRecurrence(Recurrence.Weekly)
+                            val recurrence = when (index) {
+                                0 -> Recurrence.Weekly
+                                1 -> Recurrence.Monthly
+                                2 -> Recurrence.Yearly
+                                else -> Recurrence.Weekly
                             }
+                            analyticsViewModel.setRecurrence(recurrence)
                         },
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = recurrenceOpt.size
-                        )
+                        shape = SegmentedButtonDefaults.itemShape(index, recurrenceOptions.size)
                     ) {
-                        Text(text = it)
+                        Text(text = label)
                     }
                 }
             }
-            val numOfPages = when (uiState.recurrence) {
-                Recurrence.Weekly -> 53
-                Recurrence.Monthly -> 12
-                Recurrence.Yearly -> 1
-                else -> 53
-            }
-            val pagerState = rememberPagerState(
-                pageCount = { numOfPages }
-            )
-            HorizontalPager(
-                state = pagerState,
-                reverseLayout = true
-            ) {
+
+//            PrimaryScrollableTabRow(
+//                selectedTabIndex = pagerState.currentPage,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
+//                repeat(pageCount) { index ->
+//                    Tab(
+//                        selected = pagerState.currentPage == index,
+//                        onClick = {
+//                            coroutineScope.launch {
+//                                pagerState.animateScrollToPage(index)
+//                            }
+//                        },
+//                        text = { Text("Page ${index + 1}") }
+//                    )
+//                }
+//            }
+
+            HorizontalPager(state = pagerState, reverseLayout = true) { page ->
                 Charts(
                     navController = navController,
-                    page = it,
-                    recurrence = uiState.recurrence,
-                    allExpenses = viewModel.allExpenses
+                    page = page,
+                    recurrence = analyticsState.recurrence,
+                    allExpenses = allExpenses
                 )
             }
         }
+
         BackHandler {
-            navController.navigate("expenses") {
-                popUpTo("expenses") {
-                    inclusive = true
-                }
+            navController.navigate(Routes.Expenses.route) {
+                popUpTo("expenses") { inclusive = true }
             }
         }
     }

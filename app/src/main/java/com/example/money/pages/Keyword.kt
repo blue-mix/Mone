@@ -167,7 +167,9 @@ fun KeywordMappingEditor(
                     isNewMapping = true
                     showSheet = true
                     coroutineScope.launch { sheetState.show() }
-                }
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             )
         }
     ) { innerPadding ->

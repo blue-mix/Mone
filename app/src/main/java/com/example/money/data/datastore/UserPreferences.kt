@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import com.example.money.dataStore
 
 object UserPreferences {
     private val CURRENCY_KEY = stringPreferencesKey("selected_currency")

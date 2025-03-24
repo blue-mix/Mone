@@ -28,15 +28,5 @@ class Category() : RealmObject {
         this.name = name
         this.color = color // ✅ Uses the setter to update `_colorValue`
     }
-//    companion object {
-//        fun create(name: String, color: Color): Category {
-//            val category = Category()
-//            category.name = name
-//            category.color = color // ✅ Uses setter to update `_colorValue`
-//            return category
-//        }
-//    }
 }
-
-
 

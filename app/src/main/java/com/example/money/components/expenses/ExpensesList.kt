@@ -12,7 +12,7 @@ import com.example.money.viewmodels.CurrencyViewModel
 
 
 @Composable
-fun ExpensesList(expenses: List<Expense>, modifier: Modifier = Modifier, currencyViewModel: CurrencyViewModel) {
+fun ExpensesList(expenses: List<Expense>, modifier: Modifier = Modifier) {
     val groupedExpenses = expenses.groupedByDay()
 
     Column(modifier = modifier) {

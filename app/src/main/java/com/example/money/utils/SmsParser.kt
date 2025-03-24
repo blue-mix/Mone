@@ -38,6 +38,7 @@ object SmsParser {
     fun parseSms(message: String): ParsedTransaction? {
         return when {
             debitPattern.containsMatchIn(message) -> {
+                Log.d("SmsParser", "tick found in: $message")
                 val match = debitPattern.find(message) ?: return null
                 val (account, amount, dateStr, merchant, referenceNo) = match.destructured
                 ParsedTransaction(
@@ -51,6 +52,7 @@ object SmsParser {
             }
 
             creditGovtPattern.containsMatchIn(message) -> {
+                Log.d("SmsParser", "tick found in: $message")
                 val match = creditGovtPattern.find(message) ?: return null
                 val (amount, account, dateStr) = match.destructured
                 ParsedTransaction(
@@ -64,6 +66,7 @@ object SmsParser {
             }
 
             creditNeftPattern.containsMatchIn(message) -> {
+                Log.d("SmsParser", "tick found in: $message")
                 val match = creditNeftPattern.find(message) ?: return null
                 val (amount, account, dateStr, merchant) = match.destructured
                 ParsedTransaction(

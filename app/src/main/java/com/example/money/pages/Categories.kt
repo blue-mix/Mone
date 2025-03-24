@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.*
@@ -63,7 +64,7 @@ fun Categories(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.KeyboardArrowLeft,
+                            imageVector =Icons.Default.ArrowBack,
                             contentDescription = "Settings"
                         )
                         Spacer(modifier = Modifier.width(4.dp))

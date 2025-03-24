@@ -39,17 +39,17 @@ fun ExpensesByPeriod(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             groupedExpenses.keys.forEach {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = it.formatDay(),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth(),
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Text(
+//                        text = it.formatDay(),
+//                        style = MaterialTheme.typography.titleMedium,
+//                        fontWeight = FontWeight.SemiBold
+//                    )
+//                }
                 ExpensesDayGroup(
                     date = it,
                     modifier = Modifier,

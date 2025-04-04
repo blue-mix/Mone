@@ -1,6 +1,6 @@
-# 💸 MoneyMate – Smart Expense Tracker
+# 💸 Mone – Smart Expense Tracker
 
-**MoneyMate** is a modern, sleek, and offline-first expense tracking app built with **Jetpack Compose**, **Koin**, and **Realm**. Designed for simplicity, privacy, and performance – MoneyMate automatically parses your bank SMS messages to help you stay on top of your finances.
+**Mone** is a modern, sleek, and offline-first expense tracking app built with **Jetpack Compose**, **Koin**, and **Realm**. Designed for simplicity, privacy, and performance – MoneyMate automatically parses your bank SMS messages to help you stay on top of your finances.
 
 ---
 

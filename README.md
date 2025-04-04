@@ -1,6 +1,6 @@
 # 💸 Mone – Smart Expense Tracker
 
-**Mone** is a modern, sleek, and offline-first expense tracking app built with **Jetpack Compose**, **Koin**, and **Realm**. Designed for simplicity, privacy, and performance – MoneyMate automatically parses your bank SMS messages to help you stay on top of your finances.
+**Mone** is a modern, sleek, and offline-first expense tracking app built with **Jetpack Compose**, **Koin**, and **Realm**. Designed for simplicity, privacy, and performance – Mone automatically parses your bank SMS messages to help you stay on top of your finances.
 
 ---
 
@@ -41,21 +41,70 @@
 
 ---
 
-## 🧩 Modules
+## 🧹 Modules
 
 - `viewmodels/` – State + logic containers
 - `pages/` – UI screens (e.g., Expenses, Analytics, Dashboard)
 - `data/` – Realm DB, Repositories, and seeders
 - `components/` – Reusable UI elements and utilities
+- `utils/` – SMS parser, filters, number and date utilities
+- `datastore/` – Persistent user preferences and onboarding state
 
 ---
 
-## 🧪 Testing
+## 🤪 Project Structure
 
-We're in the process of expanding coverage with:
-- `koin-test` for ViewModel unit testing
-- Mockable interfaces for repository layer
-- Separation of pure functions into utils for fast, isolated tests
+```bash
+Mone/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/example/money/
+│   │   │   │   ├── components/         # Charts, UI widgets, input controls
+│   │   │   │   ├── pages/              # Main screens (Dashboard, Analytics, etc.)
+│   │   │   │   ├── viewmodels/         # ViewModels for each screen/module
+│   │   │   │   ├── data/               # DB setup, repositories, models
+│   │   │   │   ├── utils/              # Parser, filters, date/number helpers
+│   │   │   │   └── navigation/         # AppRoutes and BottomNavItems
+│   │   │   └── res/                    # UI assets, themes, and images
+│   ├── build.gradle.kts
+├── build.gradle.kts
+└── settings.gradle.kts
+```
+
+---
+
+## 🚪 Contribution Guide
+
+We welcome contributions! Here's how to get started:
+
+### 1. Fork the repository
+Click on the "Fork" button at the top-right of this page to create your own copy.
+
+### 2. Clone your fork
+```bash
+git clone https://github.com/yourusername/Mone.git
+cd Mone
+```
+
+### 3. Create a feature branch
+```bash
+git checkout -b feature/your-feature-name
+```
+
+### 4. Make changes and commit
+```bash
+git add .
+git commit -m "Add your message"
+```
+
+### 5. Push and open a pull request
+```bash
+git push origin feature/your-feature-name
+```
+Open a PR from your fork's branch into the main `blue-mix/Mone` repo.
+
+Please follow proper commit message hygiene, write clean code, and test your features before submitting a PR. 🙌
 
 ---
 
@@ -71,6 +120,7 @@ We're in the process of expanding coverage with:
 ### ▶️ Run the App
 
 ```bash
-git clone https://github.com/yourusername/moneymate.git
-cd moneymate
+git clone https://github.com/blue-mix/Mone.git
+cd Mone
 ./gradlew installDebug
+```

@@ -40,12 +40,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
-/**
- * Data class to hold the currency names and values for the currency picker.
- * @param currencyNames Array of currency names.
- * @param currencyValues Array of currency values.
- */
 @Immutable
 data class CurrencyPickerData(
     val currencyNames: Array<String>,

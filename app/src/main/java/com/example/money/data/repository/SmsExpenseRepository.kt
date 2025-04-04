@@ -11,6 +11,8 @@ import com.example.money.utils.mapMerchantToCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import androidx.core.net.toUri
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.Sort
 
 class SmsExpenseRepository(private val context: Context) : ExpenseRepository {
     override suspend fun readSmsExpenses(): List<Expense> = withContext(Dispatchers.IO) {
@@ -23,7 +25,7 @@ class SmsExpenseRepository(private val context: Context) : ExpenseRepository {
             val indexBody = it.getColumnIndex("body")
             while (it.moveToNext()) {
                 val smsBody = it.getString(indexBody)
-                val parsed = SmsParser.parseSms(smsBody)
+                val parsed = SmsParser.parseSmsNew(smsBody)
                 val expense = parsed?.date?.let { date ->
                     Expense.create(
                         amount = if (parsed.type == "credit") parsed.amount else -parsed.amount,
@@ -37,5 +39,23 @@ class SmsExpenseRepository(private val context: Context) : ExpenseRepository {
             }
         }
         expenses
+
     }
+
+    override suspend fun readDatabaseExpenses(): List<Expense> = withContext(Dispatchers.IO) {
+        db.query(Expense::class)
+            .find()
+
+    }
+
+    override suspend fun saveExpenses(expenses: List<Expense>) = withContext(Dispatchers.IO) {
+        db.write {
+            expenses.forEach { expense ->
+                copyToRealm(expense)
+            }
+        }
+    }
+
+
+
 }

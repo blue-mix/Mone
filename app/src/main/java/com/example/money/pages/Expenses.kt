@@ -2,13 +2,11 @@ package com.example.money.pages
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -22,7 +20,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -32,8 +29,6 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -57,10 +52,7 @@ import com.example.money.ui.theme.LabelSecondary
 import com.example.money.ui.theme.TopAppBarBackground
 import com.example.money.ui.theme.Typography
 import com.example.money.viewmodels.ExpensesViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,8 +73,8 @@ fun Expenses(
     val pullRefreshState = rememberPullToRefreshState(
 
     )
-    val coroutineScope =rememberCoroutineScope()
-Log.d("SmsParser","${state.filteredExpenses.size}")
+    val coroutineScope = rememberCoroutineScope()
+    Log.d("SmsParser", "${state.filteredExpenses.size}")
     Scaffold(
         topBar = {
             MediumTopAppBar(
@@ -100,109 +92,95 @@ Log.d("SmsParser","${state.filteredExpenses.size}")
             )
         }
     ) { innerPadding ->
-//        PullToRefreshBox (
-//            isRefreshing = isRefreshing.value,
-//            onRefresh = {
-//                coroutineScope.launch {
-//                    isRefreshing.value = true
-//                    delay(2.seconds)
-//                    vm.refresh()
-//
-//
-//                    isRefreshing.value = false }
-//
-//            },
-//            modifier = Modifier
-//                .padding(innerPadding)
-//                .fillMaxSize(),
-//            state = pullRefreshState,
-//
-//        ) {
-            Column(
-                modifier = Modifier
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding(),
+                    start = 16.dp,
+                    end = 16.dp
+                )
 
-                    .padding(horizontal = 16.dp)
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Recurrence Picker
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Recurrence Picker
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Text(
-                        "Total for:",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    PickerTrigger(
-                        state.recurrence.target,
-                        onClick = { recurrenceMenuOpened = !recurrenceMenuOpened })
+                Text(
+                    "Total for:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                PickerTrigger(
+                    state.recurrence.target,
+                    onClick = { recurrenceMenuOpened = !recurrenceMenuOpened })
 
-                    DropdownMenu(
-                        expanded = recurrenceMenuOpened,
-                        onDismissRequest = { recurrenceMenuOpened = false }
-                    ) {
-                        recurrences.forEach { recurrence ->
-                            DropdownMenuItem(
-                                text = { Text(recurrence.target) },
-                                leadingIcon = { Icon(Icons.Default.CalendarToday, null) },
-                                onClick = {
-                                    vm.setRecurrence(recurrence)
-                                    recurrenceMenuOpened = false
-                                }
-                            )
-                        }
+                DropdownMenu(
+                    expanded = recurrenceMenuOpened,
+                    onDismissRequest = { recurrenceMenuOpened = false }
+                ) {
+                    recurrences.forEach { recurrence ->
+                        DropdownMenuItem(
+                            text = { Text(recurrence.target) },
+                            leadingIcon = { Icon(Icons.Default.CalendarToday, null) },
+                            onClick = {
+                                vm.setRecurrence(recurrence)
+                                recurrenceMenuOpened = false
+                            }
+                        )
                     }
                 }
-
-                // Total Amount Card
-                Surface(
-                    tonalElevation = 2.dp,
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Total:", style = Typography.bodyLarge)
-                        Row {
-                            Text("₹", style = Typography.titleMedium, color = LabelSecondary)
-                            Text(
-                                text = DecimalFormat("##,##,###.##").format(state.sumTotal),
-                                style = Typography.titleMedium,
-                                color = if (state.sumTotal < 0) Color(0xFFD32F2F) else Color(
-                                    0xFF2E7D32
-                                )
-                            )
-                        }
-                    }
-                }
-
-                // Filter Buttons
-                TransactionFilterSegmentedButton(
-                    selectedOption = state.transactionFilter,
-                    onOptionSelected = { vm.setTransactionFilter(it) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                )
-
-                // Expenses List
-                ExpensesList(
-                    expenses = state.filteredExpenses,
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                )
             }
 
+            // Total Amount Card
+            Surface(
+                tonalElevation = 2.dp,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Total:", style = Typography.bodyLarge)
+                    Row {
+                        Text("₹", style = Typography.titleMedium, color = LabelSecondary)
+                        Text(
+                            text = DecimalFormat("##,##,###.##").format(state.sumTotal),
+                            style = Typography.titleMedium,
+                            color = if (state.sumTotal < 0) Color(0xFFD32F2F) else Color(
+                                0xFF2E7D32
+                            )
+                        )
+                    }
+                }
+            }
+
+            // Filter Buttons
+            TransactionFilterSegmentedButton(
+                selectedOption = state.transactionFilter,
+                onOptionSelected = { vm.setTransactionFilter(it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+            // Expenses List
+            ExpensesList(
+                expenses = state.filteredExpenses,
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            )
         }
+
     }
+}
 
 @Composable
 fun TransactionFilterSegmentedButton(

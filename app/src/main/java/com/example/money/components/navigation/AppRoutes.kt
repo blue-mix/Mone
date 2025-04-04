@@ -16,4 +16,6 @@ sealed class Routes(val route: String) {
     object Categories : Routes("settings/categories")
     object Keywords : Routes("settings/keyword")
     object Currency : Routes("settings/currency")
+    object Spending : Routes("analytics/spending")
+    object Dashboard : Routes("home")
 }

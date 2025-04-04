@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -67,7 +71,17 @@ fun AnalyticsPage(
                 title = { Text("Analytics", style = MaterialTheme.typography.titleLarge) },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = TopAppBarBackground)
             )
-        },
+        }, floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(Routes.Spending.route) // Replace with actual route name if different
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(Icons.Default.PieChart, contentDescription = "Spending Breakdown")
+            }
+        }
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -96,23 +110,6 @@ fun AnalyticsPage(
                     }
                 }
             }
-
-//            PrimaryScrollableTabRow(
-//                selectedTabIndex = pagerState.currentPage,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                repeat(pageCount) { index ->
-//                    Tab(
-//                        selected = pagerState.currentPage == index,
-//                        onClick = {
-//                            coroutineScope.launch {
-//                                pagerState.animateScrollToPage(index)
-//                            }
-//                        },
-//                        text = { Text("Page ${index + 1}") }
-//                    )
-//                }
-//            }
 
             HorizontalPager(state = pagerState, reverseLayout = true) { page ->
                 Charts(

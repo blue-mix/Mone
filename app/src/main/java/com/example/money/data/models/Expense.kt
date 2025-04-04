@@ -1,12 +1,14 @@
 package com.example.money.data.models
 
 
+import com.example.money.utils.calculateDateRange
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.absoluteValue
 
 class Expense() : RealmObject {
     @PrimaryKey
@@ -31,19 +33,7 @@ class Expense() : RealmObject {
     var note: String = ""
     var category: Category? = null
 
-    //    constructor(
-//        amount: Double,
-//        recurrence: Recurrence,
-//        date: LocalDateTime,
-//        note: String,
-//        category: Category,
-//    ) : this() {
-//        this.amount = amount
-//        this._recurrenceName = recurrence.name
-//        this._dateValue = date.toString()
-//        this.note = note
-//        this.category = category
-//    }
+
     companion object {
         fun create(
             amount: Double,
@@ -151,3 +141,31 @@ fun List<Expense>.groupedByMonth(): Map<String, DayExpenses> {
 
     return dataMap.toSortedMap(compareByDescending { it })
 }
+
+fun List<Expense>.toCategorySpendingList(): List<CategorySpending> {
+    val totalAmount = this.sumOf { it.amount.absoluteValue }
+
+    return this
+        .filter { it.category != null } // Ignore uncategorized
+        .groupBy { it.category!! }
+        .map { (category, expensesInCategory) ->
+            val amount = expensesInCategory.sumOf { it.amount.absoluteValue }
+            val percentage = if (totalAmount != 0.0) (amount / totalAmount).toFloat() else 0f
+
+            CategorySpending(
+                name = category.name,
+                color = category.color,
+                amount = amount,
+                percentage = percentage,
+                transactions = expensesInCategory.size
+            )
+        }
+        .sortedByDescending { it.amount } // Optional: largest spending first
+}
+
+fun List<Expense>.filterByDateRange(start: LocalDateTime, end: LocalDateTime): List<Expense> {
+    return this.filter { it.date in start..end }
+}
+
+
+

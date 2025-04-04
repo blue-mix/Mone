@@ -1,22 +1,7 @@
 package com.example.money.viewmodels
 
 
-//import android.app.Application
-//import androidx.lifecycle.AndroidViewModel
-//import androidx.lifecycle.viewModelScope
-//import com.example.money.data.datastore.UserPreferences
-//import kotlinx.coroutines.flow.Flow
-//import kotlinx.coroutines.launch
-//
-//class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
-//    val selectedCurrency: Flow<String> = UserPreferences.getSelectedCurrency(application)
-//
-//    fun saveSelectedCurrency(currency: String) {
-//        viewModelScope.launch {
-//            UserPreferences.saveSelectedCurrency(getApplication(), currency)
-//        }
-//    }
-//}
+
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

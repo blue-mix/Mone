@@ -1,51 +1,115 @@
-[versions]
-#agp = "8.7.0"
-#kotlin = "1.9.20"
+#[versions]
+#kotlinxSerializationJson = "1.6.3"
+#chartsAlpha = "0.2.4-alpha"
+#meSaketSwipe = "1.3.0"
+#dateTimePickers = "0.7.2"
+#skydovesColorpickerCompose = "1.1.2"
+#androidx-datastore = "1.0.0"
+#lottie ="6.4.0"
+#activityCompose = "1.10.1"
+#agp = "8.9.0"
+#composeBom = "2025.02.00"
 #coreKtx = "1.15.0"
+#espressoCore = "3.6.1"
 #junit = "4.13.2"
 #junitVersion = "1.2.1"
-#espressoCore = "3.6.1"
+#kotlin = "2.0.21"
 #lifecycleRuntimeKtx = "2.8.7"
-#activityCompose = "1.10.0"
-#composeBom = "2024.04.01"
-#navigationCompose = "2.8.2"
-kotlinxSerializationJson = "1.6.3"
-chartsAlpha = "0.2.4-alpha"
-meSaketSwipe = "1.3.0"
-#realmKotlin = "1.11.0"
-dateTimePickers ="0.7.2"
-skydovesColorpickerCompose="1.1.2"
-androidx-datastore = "1.0.0"
-##vicoCompose = "1.16.1"
+#realmKotlin = "3.0.0"
 #coreSplashscreen = "1.1.0-rc01"
 #materialIconsExtended = "1.7.8"
+#navigationCompose = "2.8.8"
+#vicoCompose = "1.16.1"
+#compose-charts="0.1.2"
+#
+#[libraries]
+#androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+#junit = { group = "junit", name = "junit", version.ref = "junit" }
+#androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+#androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+#androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+#androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+#androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+#androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+#androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+#androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+#androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+#androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+#androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+#androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+#androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
+#
+#androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+#kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+#
+#compose-material3-datetime-pickers = { group = "com.marosseleng.android", name = "compose-material3-datetime-pickers", version.ref = "dateTimePickers" }
+#tehras-charts = { group = "com.github.tehras", name = "charts", version.ref = "chartsAlpha" }
+#me-saket-swipe = { group = "me.saket.swipe", name = "swipe", version.ref = "meSaketSwipe" }
+#realm-kotlin = { group = "io.realm.kotlin", name = "library-base", version.ref = "realmKotlin" }
+#skydoves-colorpicker-compose = { group = "com.github.skydoves", name = "colorpicker-compose", version.ref = "skydovesColorpickerCompose" }
+#
+##new
+#androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+#patrykandpatrick-vico-core = { module = "com.patrykandpatrick.vico:core", version.ref = "vicoCompose" }
+#patrykandpatrick-vico-compose = { module = "com.patrykandpatrick.vico:compose", version.ref = "vicoCompose" }
+#patrykandpatrick-vico-compose-m3 = { module = "com.patrykandpatrick.vico:compose-m3", version.ref = "vicoCompose" }
+#androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+#lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
+#ehsannarmani-compose-charts = { group = "io.github.ehsannarmani", name = "compose-charts", version.ref = "compose-charts" }
+#
+#[plugins]
+#android-application = { id = "com.android.application", version.ref = "agp" }
+#kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+#compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+#realm-kotlin = { id = "io.realm.kotlin", version.ref = "realmKotlin" }
 
-activityCompose = "1.10.1"
+[versions]
+# Core
 agp = "8.9.0"
-composeBom = "2025.02.00"
-coreKtx = "1.15.0"
-espressoCore = "3.6.1"
-junit = "4.13.2"
-junitVersion = "1.2.1"
 kotlin = "2.0.21"
-lifecycleRuntimeKtx = "2.8.7"
-uiTestManifest = "1.7.8"
-realmKotlin = "3.0.0"
+coreKtx = "1.15.0"
 coreSplashscreen = "1.1.0-rc01"
-coroutinesCore = "1.10.1"
+androidxDatastore = "1.0.0"
+
+# Compose & UI
+composeBom = "2025.02.00"
+activityCompose = "1.10.1"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.8.8"
-composeMaterial3DatetimePickers = "0.7.2"
-lifecycleViewmodelCompose = "2.8.7"
-appcompat = "1.7.0"
+
+# Lifecycle
+lifecycleRuntimeKtx = "2.8.7"
+
+# Serialization
+kotlinxSerializationJson = "1.6.3"
+
+# Coroutines
+# (You can add this if needed: coroutines = "1.7.3")
+
+# Realm
+realmKotlin = "3.0.0"
+
+# Animations & UI Libraries
+lottie = "6.4.0"
+chartsAlpha = "0.2.4-alpha"
+composeCharts = "0.1.2"
 vicoCompose = "1.16.1"
+dateTimePickers = "0.7.2"
+meSaketSwipe = "1.3.0"
+skydovesColorpickerCompose = "1.1.2"
+
+# Testing
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+
 [libraries]
+# Core & Lifecycle
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+
+# Compose Platform
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
@@ -54,28 +118,43 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 
+# Compose Integrations
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+# Data Storage
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
+
+# Serialization
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
-compose-material3-datetime-pickers = { group = "com.marosseleng.android", name = "compose-material3-datetime-pickers", version.ref = "dateTimePickers" }
-tehras-charts = { group = "com.github.tehras", name = "charts", version.ref = "chartsAlpha" }
-me-saket-swipe = { group = "me.saket.swipe", name = "swipe", version.ref = "meSaketSwipe" }
+# Realm
 realm-kotlin = { group = "io.realm.kotlin", name = "library-base", version.ref = "realmKotlin" }
+
+# Charts & UI Enhancements
+tehras-charts = { group = "com.github.tehras", name = "charts", version.ref = "chartsAlpha" }
+ehsannarmani-compose-charts = { group = "io.github.ehsannarmani", name = "compose-charts", version.ref = "composeCharts" }
+compose-material3-datetime-pickers = { group = "com.marosseleng.android", name = "compose-material3-datetime-pickers", version.ref = "dateTimePickers" }
+me-saket-swipe = { group = "me.saket.swipe", name = "swipe", version.ref = "meSaketSwipe" }
 skydoves-colorpicker-compose = { group = "com.github.skydoves", name = "colorpicker-compose", version.ref = "skydovesColorpickerCompose" }
 
-#new
-androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+# Vico Charts
 patrykandpatrick-vico-core = { module = "com.patrykandpatrick.vico:core", version.ref = "vicoCompose" }
 patrykandpatrick-vico-compose = { module = "com.patrykandpatrick.vico:compose", version.ref = "vicoCompose" }
 patrykandpatrick-vico-compose-m3 = { module = "com.patrykandpatrick.vico:compose-m3", version.ref = "vicoCompose" }
-androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 
+# Animation
+lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
+
+# Testing
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 realm-kotlin = { id = "io.realm.kotlin", version.ref = "realmKotlin" }
-

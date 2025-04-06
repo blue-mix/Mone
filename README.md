@@ -1,6 +1,18 @@
+
 # 💸 Mone – Smart Expense Tracker
 
 **Mone** is a modern, sleek, and offline-first expense tracking app built with **Jetpack Compose**, **Koin**, and **Realm**. Designed for simplicity, privacy, and performance – Mone automatically parses your bank SMS messages to help you stay on top of your finances.
+
+---
+
+## 📦 Latest Release
+
+🎉 **v1.0.0 – Initial Public Release**  
+📅 *April 2025*
+
+- 🔄 Tag: `v1.0.0`
+- 📥 [Download APK](https://github.com/blue-mix/Mone/releases/latest) *(Signed release build)*
+- 📝 [Full Changelog →](https://github.com/blue-mix/Mone/releases)
 
 ---
 
@@ -43,12 +55,12 @@
 
 ## 🧹 Modules
 
-- `viewmodels/` – State + logic containers
-- `pages/` – UI screens (e.g., Expenses, Analytics, Dashboard)
-- `data/` – Realm DB, Repositories, and seeders
-- `components/` – Reusable UI elements and utilities
-- `utils/` – SMS parser, filters, number and date utilities
-- `datastore/` – Persistent user preferences and onboarding state
+- `viewmodels/` – State + logic containers  
+- `pages/` – UI screens (e.g., Expenses, Analytics, Dashboard)  
+- `data/` – Realm DB, Repositories, and seeders  
+- `components/` – Reusable UI elements and utilities  
+- `utils/` – SMS parser, filters, number and date utilities  
+- `datastore/` – Persistent user preferences and onboarding state  
 
 ---
 
@@ -112,9 +124,9 @@ Please follow proper commit message hygiene, write clean code, and test your fea
 
 ### ✅ Prerequisites
 
-- Android Studio Hedgehog or newer
-- Kotlin 2.0+
-- Gradle 8.9+
+- Android Studio Hedgehog or newer  
+- Kotlin 2.0+  
+- Gradle 8.9+  
 - JDK 17+
 
 ### ▶️ Run the App
@@ -124,3 +136,5 @@ git clone https://github.com/blue-mix/Mone.git
 cd Mone
 ./gradlew installDebug
 ```
+
+---
